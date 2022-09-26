@@ -15,6 +15,8 @@
 		05F78B5E28E1F541002B2975 /* SetGameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B5D28E1F541002B2975 /* SetGameUITests.swift */; };
 		05F78B6028E1F541002B2975 /* SetGameUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B5F28E1F541002B2975 /* SetGameUITestsLaunchTests.swift */; };
 		05F78B6D28E1F5A2002B2975 /* SetGameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B6C28E1F5A2002B2975 /* SetGameModels.swift */; };
+		05F78B6F28E20EC3002B2975 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B6E28E20EC3002B2975 /* Extensions.swift */; };
+		05F78B7128E2263F002B2975 /* SquiggleShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B7028E2263F002B2975 /* SquiggleShape.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +48,8 @@
 		05F78B5D28E1F541002B2975 /* SetGameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameUITests.swift; sourceTree = "<group>"; };
 		05F78B5F28E1F541002B2975 /* SetGameUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		05F78B6C28E1F5A2002B2975 /* SetGameModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameModels.swift; sourceTree = "<group>"; };
+		05F78B6E28E20EC3002B2975 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		05F78B7028E2263F002B2975 /* SquiggleShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquiggleShape.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,8 +100,10 @@
 		05F78B4128E1F540002B2975 /* SetGame */ = {
 			isa = PBXGroup;
 			children = (
+				05F78B6E28E20EC3002B2975 /* Extensions.swift */,
 				05F78B4228E1F540002B2975 /* SetGameApp.swift */,
 				05F78B4428E1F540002B2975 /* ContentView.swift */,
+				05F78B7028E2263F002B2975 /* SquiggleShape.swift */,
 				05F78B6C28E1F5A2002B2975 /* SetGameModels.swift */,
 				05F78B4628E1F541002B2975 /* Assets.xcassets */,
 				05F78B4828E1F541002B2975 /* Preview Content */,
@@ -262,7 +268,9 @@
 			files = (
 				05F78B4528E1F540002B2975 /* ContentView.swift in Sources */,
 				05F78B4328E1F540002B2975 /* SetGameApp.swift in Sources */,
+				05F78B7128E2263F002B2975 /* SquiggleShape.swift in Sources */,
 				05F78B6D28E1F5A2002B2975 /* SetGameModels.swift in Sources */,
+				05F78B6F28E20EC3002B2975 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
