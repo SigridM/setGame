@@ -39,13 +39,13 @@ struct SquiggleShape: Shape {
         
         // control points for the high hump of the upper curve, and the low dip of the lower
         // curve, are equal distance away from the left and right edges, respectively
-        static let innerControlXInset = 20.0
+        static let innerControlXInset = 33.0
         static let upperControl1XFactor = innerControlXInset / defaultWidth
         static let lowerControl1XFactor = (defaultWidth - innerControlXInset) / defaultWidth
         
         // control points for the low dip of the upper curve, and the high hump of the lower
         // curve, are equal distances away from the right and left edges, respectively
-        static let outerControlXInset = 19.0
+        static let outerControlXInset = 31.0
         static let upperControl2XFactor = (defaultWidth - outerControlXInset) / defaultWidth
         static let lowerControl2XFactor = outerControlXInset / defaultWidth
         
@@ -63,7 +63,7 @@ struct SquiggleShape: Shape {
         
         // control points for the inner parts of the left and right endcaps are the same distance
         // from the left and right edges, respectively
-        static let innerEndCapYInset = 3.0
+        static let innerEndCapYInset = 2.0
         static let leftCapControl1XFactor = innerEndCapYInset / defaultWidth
         static let rightCapControl1XFactor = (defaultWidth - innerEndCapYInset) / defaultWidth
         
@@ -180,9 +180,11 @@ struct SquiggleShape: Shape {
     }
     
     /// Creates and returns a Path that draws a single squiggle
+    /// Note that although it will scale to any rectangle, the squiggle looks best in a rectangle
+    /// with an approximately 3x1 aspect ratio (3 wide by 1 tall).
     /// - Parameter rect: a CGRect circumscribing the squiggle
     /// - Returns: a Path that draws the squiggle
-    private func squiggle(in rect: CGRect) -> Path {
+    func squiggle(in rect: CGRect) -> Path {
         let points = pointsScaled(to: rect)
         let controlPoints = controlPointsScaled(to: rect)
     
@@ -205,6 +207,159 @@ struct SquiggleShape: Shape {
                       control1: controlPoints["left"]![0],
                       control2: controlPoints["left"]![1])
 
+        return path
+    }
+    
+    /// Creates and returns a Path that draws a double squiggle
+    /// Note that although it will scale to any rectangle, the squiggle looks best in a rectangle
+    /// with an approximately 3x1 aspect ratio (3 wide by 1 tall).
+    /// - Parameter rect: a CGRect circumscribing the squiggle
+    /// - Returns: a Path that draws the squiggle
+    func doubleSquiggle(in rect: CGRect) -> Path {
+        var points = pointsScaled(to: rect)
+        var controlPoints = controlPointsScaled(to: rect)
+        
+        let translation = CGAffineTransform(translationX: 0.0, y: rect.height/2)
+        let scaling = CGAffineTransform(scaleX: 1.0, y: 0.5)
+        
+        points = points.map{$0.applying(scaling)}
+        
+        controlPoints.keys.forEach { eachKey in
+            let cPoints = controlPoints[eachKey]!
+            controlPoints[eachKey] = cPoints.map{$0.applying(scaling)}
+        }
+    
+        var path = Path()
+
+        path.move(to: points[0])
+        path.addCurve(to: points[1],
+                      control1: controlPoints["upper"]![0],
+                      control2: controlPoints["upper"]![1])
+        
+        path.addCurve(to: points[2],
+                      control1: controlPoints["right"]![0],
+                      control2: controlPoints["right"]![1])
+
+        path.addCurve(to: points[3],
+                      control1: controlPoints["lower"]![0],
+                      control2: controlPoints["lower"]![1])
+        
+        path.addCurve(to: points[0],
+                      control1: controlPoints["left"]![0],
+                      control2: controlPoints["left"]![1])
+        
+        points = points.map{$0.applying(translation)}
+        
+        controlPoints.keys.forEach { eachKey in
+            let cPoints = controlPoints[eachKey]!
+            controlPoints[eachKey] = cPoints.map{$0.applying(translation)}
+        }
+        
+        path.move(to: points[0])
+        path.addCurve(to: points[1],
+                      control1: controlPoints["upper"]![0],
+                      control2: controlPoints["upper"]![1])
+        
+        path.addCurve(to: points[2],
+                      control1: controlPoints["right"]![0],
+                      control2: controlPoints["right"]![1])
+
+        path.addCurve(to: points[3],
+                      control1: controlPoints["lower"]![0],
+                      control2: controlPoints["lower"]![1])
+        
+        path.addCurve(to: points[0],
+                      control1: controlPoints["left"]![0],
+                      control2: controlPoints["left"]![1])
+        
+        return path
+    }
+    
+    /// Creates and returns a Path that draws a triple squiggle
+    /// Note that although it will scale to any rectangle, the squiggle looks best in a rectangle
+    /// with an approximately 3x1 aspect ratio (3 wide by 1 tall).
+    /// - Parameter rect: a CGRect circumscribing the squiggle
+    /// - Returns: a Path that draws the squiggle
+    func tripleSquiggle(in rect: CGRect) -> Path {
+        var points = pointsScaled(to: rect)
+        var controlPoints = controlPointsScaled(to: rect)
+        
+        let translation = CGAffineTransform(translationX: 0.0, y: rect.height/3)
+        let scaling = CGAffineTransform(scaleX: 1.0, y: 0.3)
+        
+        points = points.map{$0.applying(scaling)}
+        
+        controlPoints.keys.forEach { eachKey in
+            let cPoints = controlPoints[eachKey]!
+            controlPoints[eachKey] = cPoints.map{$0.applying(scaling)}
+        }
+        
+        var path = Path()
+        
+        path.move(to: points[0])
+        path.addCurve(to: points[1],
+                      control1: controlPoints["upper"]![0],
+                      control2: controlPoints["upper"]![1])
+        
+        path.addCurve(to: points[2],
+                      control1: controlPoints["right"]![0],
+                      control2: controlPoints["right"]![1])
+        
+        path.addCurve(to: points[3],
+                      control1: controlPoints["lower"]![0],
+                      control2: controlPoints["lower"]![1])
+        
+        path.addCurve(to: points[0],
+                      control1: controlPoints["left"]![0],
+                      control2: controlPoints["left"]![1])
+        
+        points = points.map{$0.applying(translation)}
+        
+        controlPoints.keys.forEach { eachKey in
+            let cPoints = controlPoints[eachKey]!
+            controlPoints[eachKey] = cPoints.map{$0.applying(translation)}
+        }
+        
+        path.move(to: points[0])
+        path.addCurve(to: points[1],
+                      control1: controlPoints["upper"]![0],
+                      control2: controlPoints["upper"]![1])
+        
+        path.addCurve(to: points[2],
+                      control1: controlPoints["right"]![0],
+                      control2: controlPoints["right"]![1])
+        
+        path.addCurve(to: points[3],
+                      control1: controlPoints["lower"]![0],
+                      control2: controlPoints["lower"]![1])
+        
+        path.addCurve(to: points[0],
+                      control1: controlPoints["left"]![0],
+                      control2: controlPoints["left"]![1])
+        
+        points = points.map{$0.applying(translation)}
+
+        controlPoints.keys.forEach { eachKey in
+            let cPoints = controlPoints[eachKey]!
+            controlPoints[eachKey] = cPoints.map{$0.applying(translation)}
+        }
+        
+        path.move(to: points[0])
+        path.addCurve(to: points[1],
+                      control1: controlPoints["upper"]![0],
+                      control2: controlPoints["upper"]![1])
+        
+        path.addCurve(to: points[2],
+                      control1: controlPoints["right"]![0],
+                      control2: controlPoints["right"]![1])
+        
+        path.addCurve(to: points[3],
+                      control1: controlPoints["lower"]![0],
+                      control2: controlPoints["lower"]![1])
+        
+        path.addCurve(to: points[0],
+                      control1: controlPoints["left"]![0],
+                      control2: controlPoints["left"]![1])
         return path
     }
     
@@ -341,33 +496,30 @@ struct SquiggleShape: Shape {
     }
     
     /// To conform to the Shape protocol, creates and returns the Path that draws the shape.
-    /// Note that although it will scale to any rectangle, the squiggle looks best in a rectangle
-    /// with an approximately 3x1 aspect ratio (3 wide by 1 tall).
     /// - Parameter rect: a CGRect that circumscribes the squiggle
     /// - Returns: a Path that draws the squiggle
     func path(in rect: CGRect) -> Path {
-        return squiggle(in: rect)
+        return tripleSquiggle(in: rect)
     }
 }
 
 struct SquiggleView: View {
-    let debugging = false
+    let debugging = true
     var body: some View {
         VStack {
             GeometryReader { geometry in
-                
                 ZStack {
                     let rect = CGRect(x:0,
                                       y: 0,
                                       width: geometry.size.width,
-                                      height: geometry.size.width/3)
+                                      height: geometry.size.height/3)
                     if debugging {
                         Rectangle()
                             .path(in: rect)
                             .opacity(0.1)
                     }
                     SquiggleShape()
-                        .path(in: rect)
+                        .squiggle(in: rect)
                         .strokedPath(StrokeStyle(lineWidth: 3.0))
                         .foregroundColor(.red)
                     
@@ -389,27 +541,47 @@ struct SquiggleView: View {
                             .foregroundColor(.blue)
                             .opacity(0.75)
                     }
+                    Spacer()
                 }
             }
+            Spacer()
             GeometryReader {geometry in
-                let rect = CGRect(x:0,
-                                  y: 0,
-                                  width: geometry.size.width,
-                                  height: geometry.size.width/3)
-                SquiggleShape()
-                    .path(in: rect)
-                    .strokedPath(StrokeStyle(lineWidth: 3.0))
-                    .foregroundColor(.red)
+                ZStack {
+                    let rect = CGRect(x:0,
+                                      y: 0,
+                                      width: geometry.size.width,
+                                      height: geometry.size.height/2)
+                    if debugging {
+                        Rectangle()
+                            .path(in: rect)
+                            .opacity(0.1)
+                    }
+                    
+                    SquiggleShape()
+                        .doubleSquiggle(in: rect)
+                        .strokedPath(StrokeStyle(lineWidth: 3.0))
+                        .foregroundColor(.red)
+                    Spacer()
+                }
             }
+            Spacer()
             GeometryReader {geometry in
-                let rect = CGRect(x:0,
-                                  y: 0,
-                                  width: geometry.size.width,
-                                  height: geometry.size.width/3)
-                SquiggleShape()
-                    .path(in: rect)
-                    .strokedPath(StrokeStyle(lineWidth: 3.0))
-                    .foregroundColor(.red)
+                ZStack {
+                    let rect = CGRect(x:0,
+                                      y: 0,
+                                      width: geometry.size.width,
+                                      height: geometry.size.height)
+                    if debugging {
+                        Rectangle()
+                            .path(in: rect)
+                            .opacity(0.1)
+                    }
+                    SquiggleShape()
+                        .tripleSquiggle(in: rect)
+                        .strokedPath(StrokeStyle(lineWidth: 3.0))
+                        .foregroundColor(.red)
+                    Spacer()
+                }
             }
         }
         .padding()
