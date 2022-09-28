@@ -341,6 +341,8 @@ struct SquiggleShape: Shape {
     }
     
     /// To conform to the Shape protocol, creates and returns the Path that draws the shape.
+    /// Note that although it will scale to any rectangle, the squiggle looks best in a rectangle
+    /// with an approximately 3x1 aspect ratio (3 wide by 1 tall).
     /// - Parameter rect: a CGRect that circumscribes the squiggle
     /// - Returns: a Path that draws the squiggle
     func path(in rect: CGRect) -> Path {
@@ -351,38 +353,64 @@ struct SquiggleShape: Shape {
 struct SquiggleView: View {
     let debugging = false
     var body: some View {
-        ZStack {
-            let rect = CGRect(x:0, y: 100, width: 350, height: 100)
-            
-            if debugging {
-                Rectangle()
+        VStack {
+            GeometryReader { geometry in
+                
+                ZStack {
+                    let rect = CGRect(x:0,
+                                      y: 0,
+                                      width: geometry.size.width,
+                                      height: geometry.size.width/3)
+                    if debugging {
+                        Rectangle()
+                            .path(in: rect)
+                            .opacity(0.1)
+                    }
+                    SquiggleShape()
+                        .path(in: rect)
+                        .strokedPath(StrokeStyle(lineWidth: 3.0))
+                        .foregroundColor(.red)
+                    
+                    if debugging {
+                        SquiggleShape()
+                            .points0to1Path(in: rect)
+                            .foregroundColor(.red)
+                            .opacity(0.75)
+                        SquiggleShape()
+                            .points1to2Path(in: rect)
+                            .foregroundColor(.purple)
+                            .opacity(0.75)
+                        SquiggleShape()
+                            .points2to3Path(in: rect)
+                            .foregroundColor(.green)
+                            .opacity(0.75)
+                        SquiggleShape()
+                            .points3to0Path(in: rect)
+                            .foregroundColor(.blue)
+                            .opacity(0.75)
+                    }
+                }
+            }
+            GeometryReader {geometry in
+                let rect = CGRect(x:0,
+                                  y: 0,
+                                  width: geometry.size.width,
+                                  height: geometry.size.width/3)
+                SquiggleShape()
                     .path(in: rect)
-                    .opacity(0.1)
-            }
-
-            SquiggleShape()
-                .path(in: rect)
-                .strokedPath(StrokeStyle())
-            
-            if debugging {
-                SquiggleShape()
-                    .points0to1Path(in: rect)
+                    .strokedPath(StrokeStyle(lineWidth: 3.0))
                     .foregroundColor(.red)
-                    .opacity(0.75)
-                SquiggleShape()
-                    .points1to2Path(in: rect)
-                    .foregroundColor(.purple)
-                    .opacity(0.75)
-                SquiggleShape()
-                    .points2to3Path(in: rect)
-                    .foregroundColor(.green)
-                    .opacity(0.75)
-                SquiggleShape()
-                    .points3to0Path(in: rect)
-                    .foregroundColor(.blue)
-                    .opacity(0.75)
             }
-
+            GeometryReader {geometry in
+                let rect = CGRect(x:0,
+                                  y: 0,
+                                  width: geometry.size.width,
+                                  height: geometry.size.width/3)
+                SquiggleShape()
+                    .path(in: rect)
+                    .strokedPath(StrokeStyle(lineWidth: 3.0))
+                    .foregroundColor(.red)
+            }
         }
         .padding()
     }
