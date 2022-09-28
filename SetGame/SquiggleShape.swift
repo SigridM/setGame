@@ -135,7 +135,8 @@ struct SquiggleShape: Shape {
     
     struct SquiggleConstants {
         // Because the original squiggle was drawn in a 60x20 rectangle, all inset calculations are
-        // based on that original grid, but then scaled by the original grid to fit any rectangle.
+        // based on that original grid, but then scaled by the original dimensions to fit any
+        // rectangle.
         static let defaultWidth = 60.0
         static let defaultHeight = 20.0
         
@@ -190,7 +191,7 @@ struct SquiggleShape: Shape {
         static let rightCapControl1XFactor = (defaultWidth - innerEndCapYInset) / defaultWidth
         
         // control points for the outer parts of the right and left endcaps are the same distance
-        // from the right and left edges, respectively
+        // outside the right and left edges, respectively
         static let outerEndCapXInset = -1.0
         static let rightCapControl2XFactor = (defaultWidth - outerEndCapXInset) / defaultWidth
         static let leftCapControl2XFactor = outerEndCapXInset / defaultWidth
@@ -202,12 +203,16 @@ struct SquiggleShape: Shape {
         static let leftCapControl1YFactor = (defaultHeight - fartherEndCapYInset) / defaultHeight
         
         // control points for the closer parts of the right and left endcaps are the same distance
-        // from the top and bottom edges, respectively
+        // inside the top and bottom edges, respectively
         static let closerEndCapYInset = 0.5
         static let rightCapControl2YFactor = closerEndCapYInset / defaultHeight
         static let leftCapControl2YFactor = (defaultHeight - closerEndCapYInset) / defaultHeight
     }
     
+    /// Creates and returns an array of the four CGPoints delimiting the four segments of the squiggle, scaled to
+    /// fit inside the given CGRect
+    /// - Parameter rect: a CGRect circumscribing the squiggle.
+    /// - Returns: an Array of four CGPoints
     private func pointsScaled(to rect: CGRect) -> [CGPoint] {
         let top = rect.origin.y
         let height = rect.height
@@ -235,6 +240,13 @@ struct SquiggleShape: Shape {
         return answer
     }
     
+    /// Creates and returns a Dictionary of Arrays of CGPoints, where each CGPoint controls some aspect
+    /// of a curved segment of the squiggle. Each array is a 2-item array with the first and second control points
+    /// for its segment. The four segments are "upper," "right," "lower," and "left." The points are all scaled
+    /// to fit inside the given rectangle.
+    /// - Parameter rect: aCGRect circumscribing the squiggle
+    /// - Returns: a Dictionary with four keys, and a 2-item array at each key. where each item in the array
+    /// is a CGPoint
     private func controlPointsScaled(to rect: CGRect) -> [String: [CGPoint]] {
         let top = rect.origin.y
         let height = rect.height
@@ -242,23 +254,17 @@ struct SquiggleShape: Shape {
         let left = rect.origin.x
         
         var answer: [String: [CGPoint]] = [:]
-        
-        return answer
-    }
-        
-    private func squiggle(in rect: CGRect) -> Path {
-        let top = rect.origin.y
-        let height = rect.height
-        let width = rect.width
-        let left = rect.origin.x
-        
-        let points = pointsScaled(to: rect)
-        
+
         let upperControl1x = left + (width * SquiggleConstants.upperControl1XFactor)
         let upperControl1y = top + (height * SquiggleConstants.upperControl1YFactor)
         
         let upperControl2x = left + (width * SquiggleConstants.upperControl2XFactor)
         let upperControl2y = top + (height * SquiggleConstants.upperControl2YFactor)
+        
+        answer["upper"] = [
+            CGPoint(x: upperControl1x, y: upperControl1y),
+            CGPoint(x: upperControl2x, y: upperControl2y)
+        ]
         
         let rightControl1x = left + (width * SquiggleConstants.rightCapControl1XFactor)
         let rightControl1y = top + (height * SquiggleConstants.rightCapControl1YFactor)
@@ -266,52 +272,72 @@ struct SquiggleShape: Shape {
         let rightControl2x = left + (width * SquiggleConstants.rightCapControl2XFactor)
         let rightControl2y = top + (height * SquiggleConstants.rightCapControl2YFactor)
         
+        answer["right"] = [
+            CGPoint(x: rightControl1x, y: rightControl1y),
+            CGPoint(x: rightControl2x, y: rightControl2y)
+        ]
+        
         let lowerControl1x = left + (width * SquiggleConstants.lowerControl1XFactor)
         let lowerControl1y = top + (height * SquiggleConstants.lowerControl1YFactor)
         
         let lowerControl2x = left + (width * SquiggleConstants.lowerControl2XFactor)
         let lowerControl2y = top + (height * SquiggleConstants.lowerControl2YFactor)
         
+        answer["lower"] = [
+            CGPoint(x: lowerControl1x, y: lowerControl1y),
+            CGPoint(x: lowerControl2x, y: lowerControl2y)
+        ]
+        
         let leftControl1x = left + (width * SquiggleConstants.leftCapControl1XFactor)
         let leftControl1y = top + (height * SquiggleConstants.leftCapControl1YFactor)
         
         let leftControl2x = left + (width * SquiggleConstants.leftCapControl2XFactor)
         let leftControl2y = top + (height * SquiggleConstants.leftCapControl2YFactor)
-       
+        
+        answer["left"] = [
+            CGPoint(x: leftControl1x, y: leftControl1y),
+            CGPoint(x: leftControl2x, y: leftControl2y)
+        ]
+        
+        return answer
+    }
+    
+    /// Creates and returns a Path that draws a single squiggle
+    /// - Parameter rect: a CGRect circumscribing the squiggle
+    /// - Returns: a Path that draws the squiggle
+    private func squiggle(in rect: CGRect) -> Path {
+        let points = pointsScaled(to: rect)
+        let controlPoints = controlPointsScaled(to: rect)
+    
         var path = Path()
 
         path.move(to: points[0])
         path.addCurve(to: points[1],
-                      control1: CGPoint(x: upperControl1x, y: upperControl1y),
-                      control2: CGPoint(x: upperControl2x, y: upperControl2y))
+                      control1: controlPoints["upper"]![0],
+                      control2: controlPoints["upper"]![1])
         
         path.addCurve(to: points[2],
-                      control1: CGPoint(x: rightControl1x, y: rightControl1y),
-                      control2: CGPoint(x: rightControl2x, y: rightControl2y))
+                      control1: controlPoints["right"]![0],
+                      control2: controlPoints["right"]![1])
 
         path.addCurve(to: points[3],
-                      control1: CGPoint(x: lowerControl1x, y: lowerControl1y),
-                      control2: CGPoint(x: lowerControl2x, y: lowerControl2y))
+                      control1: controlPoints["lower"]![0],
+                      control2: controlPoints["lower"]![1])
         
         path.addCurve(to: points[0],
-                      control1: CGPoint(x: leftControl1x, y: leftControl1y),
-                      control2: CGPoint(x: leftControl2x, y: leftControl2y))
+                      control1: controlPoints["left"]![0],
+                      control2: controlPoints["left"]![1])
 
         return path
     }
+    
+    /// For debugging, creates and returns a Path that shows the point at the beginning of the first (iupper) segment,
+    /// as well as the control points for the upper segment
+    /// - Parameter rect: a CGRect circumscribing the squiggle
+    /// - Returns: a Path that draws the three points
     func points0to1Path(in rect: CGRect) -> Path {
-        let top = rect.origin.y
-        let height = rect.height
-        let width = rect.width
-        let left = rect.origin.x
-        
         let point = pointsScaled(to: rect)[0]
-
-        let upperControl1x = left + (width * SquiggleConstants.upperControl1XFactor)
-        let upperControl1y = top + (height * SquiggleConstants.upperControl1YFactor)
-        
-        let upperControl2x = left + (width * SquiggleConstants.upperControl2XFactor)
-        let upperControl2y = top + (height * SquiggleConstants.upperControl2YFactor)
+        let controlPoints = controlPointsScaled(to: rect)
         
         let radius = 4.0
         
@@ -322,14 +348,14 @@ struct SquiggleShape: Shape {
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: false)
-        path.move(to: CGPoint(x:upperControl1x, y: upperControl1y))
-        path.addArc(center: CGPoint(x:upperControl1x, y: upperControl1y),
+        path.move(to: controlPoints["upper"]![0])
+        path.addArc(center: controlPoints["upper"]![0],
                     radius: radius/2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: true)
-        path.move(to: CGPoint(x:upperControl2x, y: upperControl2y))
-        path.addArc(center: CGPoint(x:upperControl2x, y: upperControl2y),
+        path.move(to: controlPoints["upper"]![1])
+        path.addArc(center: controlPoints["upper"]![1],
                     radius: radius / 2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
@@ -338,19 +364,13 @@ struct SquiggleShape: Shape {
         return path
     }
     
+    /// For debugging, creates and returns a Path that shows the point at the beginning of the second (right) segment,
+    /// as well as the control points for the right segment
+    /// - Parameter rect: a CGRect circumscribing the squiggle
+    /// - Returns: a Path that draws the three points
     func points1to2Path(in rect: CGRect) -> Path {
-        let top = rect.origin.y
-        let height = rect.height
-        let width = rect.width
-        let left = rect.origin.x
-        
         let point = pointsScaled(to: rect)[1]
-
-        let rightControl1x = left + (width * SquiggleConstants.rightCapControl1XFactor)
-        let rightControl1y = top + (height * SquiggleConstants.rightCapControl1YFactor)
-        
-        let rightControl2x = left + (width * SquiggleConstants.rightCapControl2XFactor)
-        let rightControl2y = top + (height * SquiggleConstants.rightCapControl2YFactor)
+        let controlPoints = controlPointsScaled(to: rect)
         
         let radius = 4.0
         
@@ -361,14 +381,14 @@ struct SquiggleShape: Shape {
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: false)
-        path.move(to: CGPoint(x:rightControl1x, y: rightControl1y))
-        path.addArc(center: CGPoint(x:rightControl1x, y: rightControl1y),
+        path.move(to: controlPoints["right"]![0])
+        path.addArc(center: controlPoints["right"]![0],
                     radius: radius/2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: true)
-        path.move(to: CGPoint(x:rightControl2x, y: rightControl2y))
-        path.addArc(center: CGPoint(x:rightControl2x, y: rightControl2y),
+        path.move(to: controlPoints["right"]![1])
+        path.addArc(center: controlPoints["right"]![1],
                     radius: radius / 2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
@@ -377,19 +397,13 @@ struct SquiggleShape: Shape {
         return path
     }
     
+    /// For debugging, creates and returns a Path that shows the point at the beginning of the third (lower) segment,
+    /// as well as the control points for the lower segment
+    /// - Parameter rect: a CGRect circumscribing the squiggle
+    /// - Returns: a Path that draws the three points
     func points2to3Path(in rect: CGRect) -> Path {
-        let top = rect.origin.y
-        let height = rect.height
-        let width = rect.width
-        let left = rect.origin.x
-        
         let point = pointsScaled(to: rect)[2]
-
-        let lowerControl1x = left + (width * SquiggleConstants.lowerControl1XFactor)
-        let lowerControl1y = top + (height * SquiggleConstants.lowerControl1YFactor)
-        
-        let lowerControl2x = left + (width * SquiggleConstants.lowerControl2XFactor)
-        let lowerControl2y = top + (height * SquiggleConstants.lowerControl2YFactor)
+        let controlPoints = controlPointsScaled(to: rect)
         
         let radius = 4.0
         
@@ -400,14 +414,14 @@ struct SquiggleShape: Shape {
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: false)
-        path.move(to: CGPoint(x:lowerControl1x, y: lowerControl1y))
-        path.addArc(center: CGPoint(x:lowerControl1x, y: lowerControl1y),
+        path.move(to: controlPoints["lower"]![0])
+        path.addArc(center: controlPoints["lower"]![0],
                     radius: radius/2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: true)
-        path.move(to: CGPoint(x:lowerControl2x, y: lowerControl2y))
-        path.addArc(center: CGPoint(x:lowerControl2x, y: lowerControl2y),
+        path.move(to: controlPoints["lower"]![1])
+        path.addArc(center: controlPoints["lower"]![1],
                     radius: radius / 2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
@@ -416,20 +430,14 @@ struct SquiggleShape: Shape {
         return path
     }
     
+    /// For debugging, creates and returns a Path that shows the point at the beginning of the last (left) segment,
+    /// as well as the control points for the left segment
+    /// - Parameter rect: a CGRect circumscribing the squiggle
+    /// - Returns: a Path that draws the three points
     func points3to0Path(in rect: CGRect) -> Path {
-        let top = rect.origin.y
-        let height = rect.height
-        let width = rect.width
-        let left = rect.origin.x
-        
         let point = pointsScaled(to: rect)[3]
-        
-        let leftControl1x = left + (width * SquiggleConstants.leftCapControl1XFactor)
-        let leftControl1y = top + (height * SquiggleConstants.leftCapControl1YFactor)
-        
-        let leftControl2x = left + (width * SquiggleConstants.leftCapControl2XFactor)
-        let leftControl2y = top + (height * SquiggleConstants.leftCapControl2YFactor)
-        
+        let controlPoints = controlPointsScaled(to: rect)
+                
         let radius = 4.0
         
         var path = Path()
@@ -439,14 +447,14 @@ struct SquiggleShape: Shape {
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: false)
-        path.move(to: CGPoint(x:leftControl1x, y: leftControl1y))
-        path.addArc(center: CGPoint(x:leftControl1x, y: leftControl1y),
+        path.move(to: controlPoints["left"]![0])
+        path.addArc(center: controlPoints["left"]![0],
                     radius: radius/2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: true)
-        path.move(to: CGPoint(x:leftControl2x, y: leftControl2y))
-        path.addArc(center: CGPoint(x:leftControl2x, y: leftControl2y),
+        path.move(to: controlPoints["left"]![1])
+        path.addArc(center: controlPoints["left"]![1],
                     radius: radius / 2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
@@ -464,10 +472,10 @@ struct SquiggleShape: Shape {
 }
 
 struct SquiggleView: View {
-    let debugging = true
+    let debugging = false
     var body: some View {
         ZStack {
-            let rect = CGRect(x:0, y: 100, width: 300, height: 100)
+            let rect = CGRect(x:0, y: 100, width: 350, height: 100)
             Rectangle()
                 .path(in: rect)
                 .opacity(0.1)
