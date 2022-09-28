@@ -8,131 +8,8 @@
 import SwiftUI
 
 struct SquiggleShape: Shape {
-    func createExampleBezierPath() -> Path {
-        // create a new path
-        var path = Path()
-        // starting point for the path (bottom left)
-        path.move(to: CGPoint(x: 2, y: 26))
-        // *********************
-        // ***** Left side *****
-        // *********************
-        // segment 1: line
-        path.addLine(to: CGPoint(x: 2, y: 15))
-        // segment 2: curve
-        path.addCurve(to: CGPoint(x: 0, y: 12), // ending point
-            control1: CGPoint(x: 2, y: 14),
-            control2: CGPoint(x: 0, y: 14))
-        // segment 3: line
-        path.addLine(to: CGPoint(x: 0, y: 2))
-        // *********************
-        // ****** Top side *****
-        // *********************
-        // segment 4: arc
-        path.addArc(center: CGPoint(x: 2, y: 2), // center point of circle
-                    radius: 2, // this will make it meet our path line
-                    startAngle: Angle(degrees: 180), // π radians = 180 degrees = straight left
-                    endAngle: Angle(degrees: 270), // 3π/2 radians = 270 degrees = straight up
-                    clockwise: false) // startAngle to endAngle goes in a clockwise direction
-        // segment 5: line
-        path.addLine(to: CGPoint(x: 8, y: 0))
-        // segment 6: arc
-        path.addArc(center: CGPoint(x: 8, y: 2),
-                    radius: 2,
-                    startAngle: Angle(degrees: 90), // straight up
-                    endAngle: Angle(degrees: 0), // 0 radians = straight right
-            clockwise: false)
-        // *********************
-        // ***** Right side ****
-        // *********************
-        // segment 7: line
-        path.addLine(to: CGPoint(x: 10, y: 12))
-        // segment 8: curve
-        path.addCurve(to: CGPoint(x: 8, y: 15), // ending point
-            control1: CGPoint(x: 10, y: 14),
-            control2: CGPoint(x: 8, y: 14))
-        // segment 9: line
-        path.addLine(to: CGPoint(x: 8, y: 26))
-        // *********************
-        // **** Bottom side ****
-        // *********************
-        // segment 10: line
-        path.closeSubpath() // draws the final line to close the path
-        return path
-    }
     
-    func createExampleBezierPath(in rect: CGRect) -> Path {
-        // create a new path
-        var path = Path()
-        // starting point for the path (bottom left)
-        let left = rect.origin.x
-        let top = rect.origin.y
-        let width = rect.width
-        let height = rect.height
-        let right = left + width
-        let bottom = top + height
-        
-        let inset = width / 5
-        let waistY = top + (height*15/26)
-        let hipY = top + (height*12/26)
-        let controlY = top + (height*14/26)
-        let curveRadius = height/13
-        let curveCenter1Y = top + curveRadius
-        let curveCenter1X = left + curveRadius
-        let curveCenter2X = right - curveRadius
-        
-        let insetLeft = left + inset
-        let insetRight = right - inset
-
-        path.move(to: CGPoint(x: insetLeft, y: bottom))
-        // *********************
-        // ***** Left side *****
-        // *********************
-        // segment 1: line
-                  
-        path.addLine(to: CGPoint(x: insetLeft, y: waistY))
-        // segment 2: curve
-        
-        path.addCurve(to: CGPoint(x: left, y: hipY), // ending point
-            control1: CGPoint(x: insetLeft, y: controlY),
-            control2: CGPoint(x: left, y: controlY))
-        // segment 3: line
-        path.addLine(to: CGPoint(x: left, y: curveCenter1Y))
-        // *********************
-        // ****** Top side *****
-        // *********************
-        // segment 4: arc
-        path.addArc(center: CGPoint(x: curveCenter1X, y: curveCenter1Y), // center point of circle
-                    radius: curveRadius, // this will make it meet our path line
-                    startAngle: Angle(degrees: 180), // π radians = 180 degrees = straight left
-                    endAngle: Angle(degrees: 270), // 3π/2 radians = 270 degrees = straight up
-                    clockwise: false) // startAngle to endAngle goes in a clockwise direction
-        // segment 5: line
-        path.addLine(to: CGPoint(x: curveCenter2X, y: top))
-        // segment 6: arc
-        path.addArc(center: CGPoint(x: curveCenter2X, y: curveCenter1Y),
-                    radius: curveRadius,
-                    startAngle: Angle(degrees: 90), // straight up
-                    endAngle: Angle(degrees: 0), // 0 radians = straight right
-                    clockwise: false)
-        // *********************
-        // ***** Right side ****
-        // *********************
-        // segment 7: line
-        path.addLine(to: CGPoint(x: right, y: hipY))
-        // segment 8: curve
-        path.addCurve(to: CGPoint(x: insetRight, y: waistY), // ending point
-            control1: CGPoint(x: right, y: controlY),
-            control2: CGPoint(x: insetRight, y: controlY))
-        // segment 9: line
-        path.addLine(to: CGPoint(x: insetRight, y: bottom))
-//        // *********************
-//        // **** Bottom side ****
-//        // *********************
-        // segment 10: line
-        path.closeSubpath() // draws the final line to close the path
-        return path
-    }
-    
+    /// A struct to encapsulate the constants for the Squiggle drawing
     struct SquiggleConstants {
         // Because the original squiggle was drawn in a 60x20 rectangle, all inset calculations are
         // based on that original grid, but then scaled by the original dimensions to fit any
@@ -463,10 +340,10 @@ struct SquiggleShape: Shape {
         return path
     }
     
+    /// To conform to the Shape protocol, creates and returns the Path that draws the shape.
+    /// - Parameter rect: a CGRect that circumscribes the squiggle
+    /// - Returns: a Path that draws the squiggle
     func path(in rect: CGRect) -> Path {
-//        return createBezierPath()
-//        return createBezierPath(in: rect)
-        
         return squiggle(in: rect)
     }
 }
@@ -476,9 +353,12 @@ struct SquiggleView: View {
     var body: some View {
         ZStack {
             let rect = CGRect(x:0, y: 100, width: 350, height: 100)
-            Rectangle()
-                .path(in: rect)
-                .opacity(0.1)
+            
+            if debugging {
+                Rectangle()
+                    .path(in: rect)
+                    .opacity(0.1)
+            }
 
             SquiggleShape()
                 .path(in: rect)
