@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// A Shape that creates a path for a worm-like curve. By default, it draws a single squiggle, but can be configured to draw
-/// any number of squiggles, stacked vertically, by initializing the shape with a squiggle number
+/// any number of squiggles, stacked vertically, by initializing the shape with a number of repetitions
 struct SquiggleShape: Shape {
     /// The total number of squiggles to be drawn, stacked vertically, defaulting to one.
     let repetitions: Int
@@ -18,8 +18,8 @@ struct SquiggleShape: Shape {
         self.repetitions = 1
     }
     
-    /// Initialize the SquiggleShape to have squiggleNumber repetitions of the squiggle, stacked vertically
-    /// - Parameter squiggleNumber: the number of repetitions of the squiggle
+    /// Initialize the SquiggleShape to have any number (greater than 1) of repetitions of the squiggle, stacked vertically
+    /// - Parameter repetitions: the number of repetitions of the squiggle
     init(_ repetitions: Int) {
         guard repetitions > 0 else {
             self.repetitions = 1
@@ -252,6 +252,9 @@ struct SquiggleShape: Shape {
     private func squiggles(in rect: CGRect) -> Path {
         var points = pointsScaled(to: rect.size)
         var controlPoints = controlPointsScaled(to: rect.size)
+        
+        // to fit all the repetitions into the space, we must divide the space up, vertically,
+        // by the number of repetitions
         let divisor = Double(repetitions)
         
         let scale = CGSize(width: 1.0, height: 1.0/divisor)
@@ -262,7 +265,7 @@ struct SquiggleShape: Shape {
         points = points.map{$0.moved(by: rect.origin)}
         controlPoints = controlPoints.mapValues{$0.moved(by: rect.origin)}
         
-        let shift = CGPoint(x: 0.0, y: rect.height/divisor)
+        let shift = CGPoint(x: 0.0, y: rect.height/divisor) // how far down to shift each rep
         
         var path = Path()
         
