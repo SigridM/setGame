@@ -440,12 +440,7 @@ struct SquiggleView: View {
                     SquiggleShape(2)
                         .path(in: squiggleRect)
                         .foregroundColor(color)
-//                        .opacity(0.5)
 
-//                    SquiggleShape(2)
-//                        .path(in: squiggleRect)
-//                        .fill(Material.thickMaterial)
-//                        .foregroundColor(color)
                     if debugging {
                         Rectangle()
                             .path(in: wholeRect)
@@ -465,31 +460,14 @@ struct SquiggleView: View {
                                       y: 0,
                                       width: geometry3.size.width,
                                       height: geometry3.size.height)
-//                    let image = Image(systemName: "circle.hexagongrid")
                     let image = Image(systemName: "circle.grid.3x3")
-//                    SquiggleShape(3)
-//                        .path(in: squiggleRect)
-////                        .strokedPath(StrokeStyle(lineWidth: 3.0))
-//                        .foregroundColor(color)
-//                        .opacity(0.65)
-//                    SquiggleShape(3)
-//                        .path(in: squiggleRect)
-//                        .foregroundColor(.gray)
-////                        .blendMode(.luminosity)
-////                        .saturation(200)
-//                        .opacity(0.35)
                     SquiggleShape(3)
                         .path(in: squiggleRect)
                         .foregroundColor(color)
                         .opacity(0.65)
                     SquiggleShape(3)
                         .path(in: squiggleRect)
-//                        .foregroundColor(color)
-                        .foregroundStyle(
-//                            .conicGradient(Gradient(colors: [.gray, color]),
-//                                             center: UnitPoint(x: squiggleRect.width, y: squiggleRect.height),
-//                                           angle: Angle(degrees: 45.0)))
-                            .image(image))
+                        .foregroundStyle(.image(image))
                         .opacity(0.55)
                     
                     if debugging {
@@ -514,7 +492,7 @@ struct SquiggleView: View {
 //                let to = rect.corner
 //
 //                context.stroke(path, with: .color(.blue), lineWidth: 3)
-////                context.fill(path, with: .linearGradient(gradient, startPoint: from, endPoint: to))
+// //                context.fill(path, with: .linearGradient(gradient, startPoint: from, endPoint: to))
 //                context.fill(path, with: GraphicsContext.Shading.color(.red))
 //            }.shadow(radius: 5.0)
         }
