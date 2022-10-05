@@ -115,15 +115,15 @@ struct SetGame {
         return hasThreeSelected && tableau[0].formsSetWith(tableau[1], and: tableau[2])
     }
     
-    var hasThreeSelected: Bool {
+    private var hasThreeSelected: Bool {
         return numSelected == 3
     }
     
-    var numSelected: Int {
+    private var numSelected: Int {
         return selectedCardIndices.count
     }
     
-    var selectedCardIndices: [Int] {
+    private var selectedCardIndices: [Int] {
         return tableau.indices(where:{$0.isSelected})
     }
     
@@ -170,5 +170,13 @@ struct SetGame {
             tableau[selectionIndex].toggleSelection()
         }
 
+    }
+    
+    mutating func addCards() {
+        tableau += deck.subsequentDeal()
+    }
+    
+    func cardsRemaining() -> Bool {
+        return !deck.isEmpty()
     }
 }
