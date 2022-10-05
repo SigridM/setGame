@@ -281,15 +281,14 @@ struct SquiggleShape: Shape {
         return path
     }
     
-    /// For debugging purposes, create and return a path that draws three circles for each squiggle in the receiver: the three points
-    /// are the point at the beginning of a segment, and the two control points controlling the curve of that segment that begins at the
-    /// point and goes to the next point. This is repeated for each squiggle in the receiver, scaled and shifted appropriately
+    /// For debugging purposes, create and return a path that draws three circles for each segment of each squiggle in the receiver:
+    /// the three points are the point at the beginning of a segment, and the two control points controlling the curve of that segment
+    /// that begins at the point and goes to the next point. This is repeated for each squiggle in the receiver, scaled and shifted
+    /// appropriately.
     /// - Parameters:
     ///   - rect: a CGRect circumscribing the entire SquiggleShape
     ///   - originIndex: the index of the point starting the segment
-    ///   - destinationIndex: the index of the point ending the segment, which also corresponds to the rawValue of the
-    ///   SegmentName denoting which segment we are drawing
-    /// - Returns: a Path that draws all three circles
+    /// - Returns: a Path that draws all the circles
     private func dotsPath(in rect: CGRect, from originIndex: Int) -> Path {
         
         let destinationIndex = (originIndex + 1) % SquiggleConstants.pointFactors.count
