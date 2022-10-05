@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437228EDCE2200378BB0 /* DiamondShape.swift */; };
+		05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437428EDD95000378BB0 /* OvalShape.swift */; };
 		05F78B4328E1F540002B2975 /* SetGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B4228E1F540002B2975 /* SetGameApp.swift */; };
 		05F78B4528E1F540002B2975 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B4428E1F540002B2975 /* ContentView.swift */; };
 		05F78B4728E1F541002B2975 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05F78B4628E1F541002B2975 /* Assets.xcassets */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		05D7437228EDCE2200378BB0 /* DiamondShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiamondShape.swift; sourceTree = "<group>"; };
+		05D7437428EDD95000378BB0 /* OvalShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvalShape.swift; sourceTree = "<group>"; };
 		05F78B3F28E1F540002B2975 /* SetGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05F78B4228E1F540002B2975 /* SetGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameApp.swift; sourceTree = "<group>"; };
 		05F78B4428E1F540002B2975 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				05F78B4228E1F540002B2975 /* SetGameApp.swift */,
 				05F78B4428E1F540002B2975 /* ContentView.swift */,
 				05F78B7028E2263F002B2975 /* SquiggleShape.swift */,
+				05D7437428EDD95000378BB0 /* OvalShape.swift */,
 				05D7437228EDCE2200378BB0 /* DiamondShape.swift */,
 				05F78B6C28E1F5A2002B2975 /* SetGameModels.swift */,
 				05F78B4628E1F541002B2975 /* Assets.xcassets */,
@@ -269,6 +272,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */,
 				05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */,
 				05F78B4528E1F540002B2975 /* ContentView.swift in Sources */,
 				05F78B4328E1F540002B2975 /* SetGameApp.swift in Sources */,

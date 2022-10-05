@@ -1,5 +1,5 @@
 //
-//  SquiggleShape.swift
+//  OvalShape.swift
 //  SetGame
 //
 //  Created by Sigrid Mortensen on 9/26/22.
@@ -7,19 +7,19 @@
 
 import SwiftUI
 
-/// A Shape that creates a path for a worm-like curve. By default, it draws a single squiggle, but can be configured to draw
-/// any number of squiggles, stacked vertically, by initializing the shape with a number of repetitions
-struct SquiggleShape: Shape {
-    /// The total number of squiggles to be drawn, stacked vertically, defaulting to one.
+/// A Shape that creates a path for a worm-like curve. By default, it draws a single oval, but can be configured to draw
+/// any number of ovals, stacked vertically, by initializing the shape with a number of repetitions
+struct OvalShape: Shape {
+    /// The total number of ovals to be drawn, stacked vertically, defaulting to one.
     let repetitions: Int
     
-    /// Initialize the SquiggleShape to have the default single squiggle
+    /// Initialize the OvalShape to have the default single oval
     init() {
         self.repetitions = 1
     }
     
-    /// Initialize the SquiggleShape to have any number (greater than 1) of repetitions of the squiggle, stacked vertically
-    /// - Parameter repetitions: the number of repetitions of the squiggle
+    /// Initialize the OvalShape to have any number (greater than 1) of repetitions of the oval, stacked vertically
+    /// - Parameter repetitions: the number of repetitions of the oval
     init(_ repetitions: Int) {
         guard repetitions > 0 else {
             self.repetitions = 1
@@ -28,35 +28,29 @@ struct SquiggleShape: Shape {
         self.repetitions = repetitions
     }
     
-    /// A struct to encapsulate the constants for the Squiggle drawing
-    struct SquiggleConstants {
-        /// Because the original squiggle was drawn in a 60x20 rectangle, all inset calculations are
+    /// A struct to encapsulate the constants for the Oval drawing
+    struct OvalConstants {
+        /// Because the original oval was drawn in a 60x20 rectangle, all inset calculations are
         /// based proportionally on that original grid, as if it was a 1x1 square. The insets are
         /// later scaled by the dimensions of a circumscribing rectangle to fit that rectangle.
         private static let defaultWidth = 60.0
         private static let defaultHeight = 20.0
         
-        /// points 0 and 2 are close to the left and right edges, respectively
-        private static let outmostPointXInset = 1.0
-        private static let point0XFactor = outmostPointXInset / defaultWidth
-        private static let point2XFactor = (defaultWidth - outmostPointXInset) / defaultWidth
+        /// points 0 and 3 are inset from the left edge, and points 1 and 2 are inset from the right edge; all by the same amount
+        private static let pointXInset = 9.0
+        private static let point0XFactor = pointXInset / defaultWidth
+        private static let point1XFactor = (defaultWidth - pointXInset) / defaultWidth
+        private static let point2XFactor = (defaultWidth - pointXInset) / defaultWidth
+        private static let point3XFactor = pointXInset / defaultWidth
         
-        /// points 1 and 3 are slightly farther from the right and left edges, respectively
-        private static let secondPointXInset = 4.0
-        private static let point1XFactor = (defaultWidth - secondPointXInset) / defaultWidth
-        private static let point3XFactor = secondPointXInset / defaultWidth
-        
-        /// points 1 and 3 are close to the top and bottom, respectively
-        private static let outmostPointYInset = 2.0
-        private static let point1YFactor = outmostPointYInset / defaultHeight
-        private static let point3YFactor = (defaultHeight - outmostPointYInset) / defaultHeight
-        
-        /// points 0 and 2 are slightly farther from the bottom and top, respectively
-        private static let secondPointYInset = 4.0
-        private static let point0YFactor = (defaultHeight - secondPointYInset) / defaultHeight
-        private static let point2YFactor = secondPointYInset / defaultHeight
-        
-        /// An Array of the four points delineating the four segments of the squiggle
+        /// points 0 and 1 are close to the top edge, and points 2 and 3 are close to the bottom edge; all by the same amount
+        private static let pointYInset = 3.5
+        private static let point0YFactor = pointYInset / defaultHeight
+        private static let point1YFactor = pointYInset / defaultHeight
+        private static let point2YFactor = (defaultHeight - pointYInset) / defaultHeight
+        private static let point3YFactor = (defaultHeight - pointYInset) / defaultHeight
+
+        /// An Array of the four points delineating the four segments of the oval
         static let pointFactors = [
             CGPoint(x: point0XFactor, y: point0YFactor),
             CGPoint(x: point1XFactor, y: point1YFactor),
@@ -64,55 +58,41 @@ struct SquiggleShape: Shape {
             CGPoint(x: point3XFactor, y: point3YFactor)
         ]
         
-        /// control points for the high hump of the upper curve, and the low dip of the lower
-        /// curve, are equal distance away from the left and right edges, respectively
-        private static let innerControlXInset = 33.0
-        private static let upperControl1XFactor = innerControlXInset / defaultWidth
-        private static let lowerControl1XFactor = (defaultWidth - innerControlXInset) / defaultWidth
+        /// the first (moving clockwise) control point for the upper curve, and the second (moving clockwise) control point for the
+        /// lower curve, are the same distance from the left edge; the second control point for the upper curve and the first
+        /// control point for the lower curve are an equal distance away from the right edge.
+        private static let controlXInset = 20.0
+        private static let upperControl1XFactor = controlXInset / defaultWidth
+        private static let upperControl2XFactor = (defaultWidth - controlXInset) / defaultWidth
+        private static let lowerControl1XFactor = (defaultWidth - controlXInset) / defaultWidth
+        private static let lowerControl2XFactor = controlXInset / defaultWidth
         
-        /// control points for the low dip of the upper curve, and the high hump of the lower
-        /// curve, are equal distances away from the right and left edges, respectively
-        private static let outerControlXInset = 31.0
-        private static let upperControl2XFactor = (defaultWidth - outerControlXInset) / defaultWidth
-        private static let lowerControl2XFactor = outerControlXInset / defaultWidth
-        
-        /// control points for the high hump of the upper curve, and the low dip of the lower
-        /// curve, are equal distances above and below the top and bottom edges, respectively
-        private static let outerControlYInset = -29.0
-        private static let upperControl1YFactor = outerControlYInset / defaultHeight
-        private static let lowerControl1YFactor = (defaultHeight - outerControlYInset) / defaultHeight
-        
-        /// control points for the low dip of the upper curve, and the high hump of the lower
-        /// curve, are equal distances below and above the bottom and top edges, respectively
-        private static let innerControlYInset = -24.0
-        private static let upperControl2YFactor = (defaultHeight - innerControlYInset) / defaultHeight
-        private static let lowerControl2YFactor = innerControlYInset / defaultHeight
-        
-        /// control points for the inner parts of the left and right endcaps are the same distance
-        /// from the left and right edges, respectively
-        private static let innerEndCapYInset = 2.0
-        private static let leftCapControl1XFactor = innerEndCapYInset / defaultWidth
-        private static let rightCapControl1XFactor = (defaultWidth - innerEndCapYInset) / defaultWidth
-        
-        /// control points for the outer parts of the right and left endcaps are the same distance
-        /// outside the right and left edges, respectively
-        private static let outerEndCapXInset = -1.0
-        private static let rightCapControl2XFactor = (defaultWidth - outerEndCapXInset) / defaultWidth
-        private static let leftCapControl2XFactor = outerEndCapXInset / defaultWidth
+        /// both control points for the upper curve are on the top edge, and both control points for the lower curve are on the
+        /// bottom edge.
+        private static let controlYInset = 0.0
+        private static let upperControl1YFactor = controlYInset / defaultHeight
+        private static let upperControl2YFactor = controlYInset / defaultHeight
+        private static let lowerControl1YFactor = (defaultHeight - controlYInset) / defaultHeight
+        private static let lowerControl2YFactor = (defaultHeight - controlYInset) / defaultHeight
 
-        /// control points for the highest and lowest parts of the right and left endcaps, respectively
-        /// are the same distance above and below the top and bottom edges, respectively
-        private static let fartherEndCapXInset = -1.0
-        private static let rightCapControl1YFactor = fartherEndCapXInset / defaultHeight
-        private static let leftCapControl1YFactor = (defaultHeight - fartherEndCapXInset) / defaultHeight
+        /// both control points for the left endcap are slightly outside the left edge, and both control points for the right endcap
+        /// are slightly outside the right edge; all by the same amount
+        private static let endCapXInset = -1.5
+        private static let leftCapControl1XFactor = endCapXInset / defaultWidth
+        private static let leftCapControl2XFactor = endCapXInset / defaultWidth
+        private static let rightCapControl1XFactor = (defaultWidth - endCapXInset) / defaultWidth
+        private static let rightCapControl2XFactor = (defaultWidth - endCapXInset) / defaultWidth
+
+        /// the first (moving clockwise) control point for the right endcap, and the second (moving clockwise) control point for the
+        /// left endcap, are the same distance from the top edge; the second control point for the right endcap and the first
+        /// control point for the left endcap are an equal distance away from the bottom edge.
+        private static let endCapYInset = 7.0
+        private static let rightCapControl1YFactor = endCapYInset / defaultHeight
+        private static let rightCapControl2YFactor = (defaultHeight - endCapYInset) / defaultHeight
+        private static let leftCapControl1YFactor = (defaultHeight - endCapYInset) / defaultHeight
+        private static let leftCapControl2YFactor = endCapYInset / defaultHeight
         
-        /// control points for the closer parts of the right and left endcaps are the same distance
-        /// inside the top and bottom edges, respectively
-        private static let closerEndCapYInset = 0.5
-        private static let rightCapControl2YFactor = closerEndCapYInset / defaultHeight
-        private static let leftCapControl2YFactor = (defaultHeight - closerEndCapYInset) / defaultHeight
-        
-        /// A Dictionary of two-point SegmentControllers, stored by their SquiggleName for readability
+        /// A Dictionary of two-point SegmentControllers, stored by their OvalName for readability
         static let controlFactors: [SegmentName: SegmentController] = [
             .upper: (SegmentController.from(x1: upperControl1XFactor,
                                           y1: upperControl1YFactor,
@@ -136,7 +116,7 @@ struct SquiggleShape: Shape {
         static let defaultPointRadius = 4.0
     }
     
-    /// An enumeration naming the four possible segments of a Squiggle: upper, right, lower, and left;
+    /// An enumeration naming the four possible segments of a Oval: upper, right, lower, and left;
     /// each has the raw value of the index of the point in the points array where the segment ends,
     /// which helps with iterating through drawing.
     enum SegmentName: Int, CaseIterable {
@@ -146,7 +126,7 @@ struct SquiggleShape: Shape {
         case left = 0
     }
     
-    /// A structure encapsulating the two control points for a segment of the squiggle. Can be stored, scaled, and moved as a
+    /// A structure encapsulating the two control points for a segment of the oval. Can be stored, scaled, and moved as a
     /// unit.
     struct SegmentController {
         /// A Tuple containing the two control points for the segment
@@ -204,32 +184,32 @@ struct SquiggleShape: Shape {
 
     }
     
-    /// Creates and returns an array of the four CGPoints delimiting the four segments of the squiggle, scaled to
+    /// Creates and returns an array of the four CGPoints delimiting the four segments of the oval, scaled to
     /// the given CGSize
-    /// - Parameter size: a CGSize into which the squiggle should fit.
+    /// - Parameter size: a CGSize into which the oval should fit.
     /// - Returns: an Array of four CGPoints
     private func pointsScaled(to size: CGSize) -> [CGPoint] {
         let scaling = CGAffineTransform(scaleX: size.width, y: size.height)
-        return SquiggleConstants.pointFactors.map{$0.applying(scaling)}
+        return OvalConstants.pointFactors.map{$0.applying(scaling)}
     }
     
     /// Creates and returns a Dictionary of SegmentControllers, each of which controls some aspect
-    /// of a curved segment of the squiggle. Each SegmentController contains the first and second control points
+    /// of a curved segment of the oval. Each SegmentController contains the first and second control points
     /// for its segment. The four segments are "upper," "right," "lower," and "left." The points are all scaled
     /// to fit inside the given CGSize.
-    /// - Parameter size: a CGSize into which the squiggle should fit.
+    /// - Parameter size: a CGSize into which the oval should fit.
     /// - Returns: a Dictionary with four SegmentControllers, keyed by SegmentName, each of whose points have been scaled
     /// to the given size.
     private func controlPointsScaled(to size: CGSize) -> [SegmentName: SegmentController] {
-        return SquiggleConstants.controlFactors.mapValues{$0.scaled(to: size)}
+        return OvalConstants.controlFactors.mapValues{$0.scaled(to: size)}
     }
     
-    /// Adds a single squiggle to the given path
+    /// Adds a single oval to the given path
     /// - Parameters:
-    ///   - path: the Path that will be modified to include the new squiggle
-    ///   - points: the end points delimiting the four segments of the squiggle
+    ///   - path: the Path that will be modified to include the new oval
+    ///   - points: the end points delimiting the four segments of the oval
     ///   - controls: the four SegmentControllers that contain the control points of the curve of each segment
-    private func addSquiggleTo(_ path: inout Path,
+    private func addOvalTo(_ path: inout Path,
                                using points: [CGPoint],
                                and controls: [SegmentName: SegmentController]) {
         path.move(to: points[0])
@@ -242,14 +222,14 @@ struct SquiggleShape: Shape {
         }
     }
 
-    /// Creates and returns a Path that draws a number of squiggles, stacked vertically, the number of which is specified by
+    /// Creates and returns a Path that draws a number of ovals, stacked vertically, the number of which is specified by
     /// the receiver's repetitions instance variable.
-    /// Note that for squiggles to look the same, no matter the number you draw, the rectangles should be proportional to the largest
-    /// number of squiggles you draw. E.g., if you are drawing a total of four squiggles, your single squiggle rect should be one
-    /// fourth the height of the quadruple-squiggle rect.
-    /// - Parameter rect: a CGRect circumscribing all the squiggles
-    /// - Returns: a Path that draws the squiggles
-    private func squiggles(in rect: CGRect) -> Path {
+    /// Note that for ovals to look the same, no matter the number you draw, the rectangles should be proportional to the largest
+    /// number of ovals you draw. E.g., if you are drawing a total of four ovals, your single oval rect should be one
+    /// fourth the height of the quadruple-oval rect.
+    /// - Parameter rect: a CGRect circumscribing all the ovals
+    /// - Returns: a Path that draws the ovals
+    private func ovals(in rect: CGRect) -> Path {
         var points = pointsScaled(to: rect.size)
         var controlPoints = controlPointsScaled(to: rect.size)
         
@@ -272,7 +252,7 @@ struct SquiggleShape: Shape {
         var iteration = 1
         
         repeat {
-            addSquiggleTo(&path, using: points, and: controlPoints)
+            addOvalTo(&path, using: points, and: controlPoints)
             points = points.map{$0.moved(by: shift)}
             controlPoints = controlPoints.mapValues{$0.moved(by: shift)}
             iteration += 1
@@ -281,17 +261,17 @@ struct SquiggleShape: Shape {
         return path
     }
     
-    /// For debugging purposes, create and return a path that draws three circles for each segment of each squiggle in the receiver:
+    /// For debugging purposes, create and return a path that draws three circles for each segment of each oval in the receiver:
     /// the three points are the point at the beginning of a segment, and the two control points controlling the curve of that segment
-    /// that begins at the point and goes to the next point. This is repeated for each squiggle in the receiver, scaled and shifted
+    /// that begins at the point and goes to the next point. This is repeated for each oval in the receiver, scaled and shifted
     /// appropriately.
     /// - Parameters:
-    ///   - rect: a CGRect circumscribing the entire SquiggleShape
+    ///   - rect: a CGRect circumscribing the entire OvalShape
     ///   - originIndex: the index of the point starting the segment
     /// - Returns: a Path that draws all the circles
     private func dotsPath(in rect: CGRect, from originIndex: Int) -> Path {
         
-        let destinationIndex = (originIndex + 1) % SquiggleConstants.pointFactors.count
+        let destinationIndex = (originIndex + 1) % OvalConstants.pointFactors.count
         let segment = SegmentName(rawValue: destinationIndex)!
         var point = pointsScaled(to: rect.size)[originIndex]
         var controlPoints = controlPointsScaled(to: rect.size)
@@ -329,7 +309,7 @@ struct SquiggleShape: Shape {
     ///   - point: the CGPoint at the beginning of the segment
     ///   - controller: the SegmentController that contains the control points for the segment
     private func addCircles(to path: inout Path, using point: CGPoint, and controller: SegmentController) {
-        let radius = SquiggleConstants.defaultPointRadius
+        let radius = OvalConstants.defaultPointRadius
         
         // Move to and draw a larger circle at the beginning point
         path.move(to: point)
@@ -356,17 +336,17 @@ struct SquiggleShape: Shape {
                     clockwise: true)
     }
     
-    /// For debugging purposes, creates and returns a ZStack of Views, each of which contains a path for a SquiggleShape of one of
-    /// the given colors, where the path can show the points and control points that make up the squiggle's curves
+    /// For debugging purposes, creates and returns a ZStack of Views, each of which contains a path for a OvalShape of one of
+    /// the given colors, where the path can show the points and control points that make up the oval's curves
     /// - Parameters:
-    ///   - rect: the CGRect that circumscribes the entire SquiggleShape
-    ///   - colors: an Array of Colors, one for each of the four segments of the Squiggle
-    /// - Returns: a composite View of all of the SquiggleShapes, with their dot paths, stacked on top of each other.
+    ///   - rect: the CGRect that circumscribes the entire OvalShape
+    ///   - colors: an Array of Colors, one for each of the four segments of the Oval
+    /// - Returns: a composite View of all of the OvalShapes, with their dot paths, stacked on top of each other.
     @ViewBuilder
     func debugViews(in rect: CGRect, with colors: [Color]) -> some View {
         ZStack {
             ForEach(0..<4) { index in
-                SquiggleShape(repetitions)
+                OvalShape(repetitions)
                     .dotsPath(in: rect, from: index)
                     .foregroundColor(colors[index])
                     .opacity(0.75)
@@ -375,20 +355,20 @@ struct SquiggleShape: Shape {
     }
     
     /// To conform to the Shape protocol, creates and returns the Path that draws the shape.
-    /// - Parameter rect: a CGRect that circumscribes the squiggle
-    /// - Returns: a Path that draws the squiggle
+    /// - Parameter rect: a CGRect that circumscribes the oval
+    /// - Returns: a Path that draws the oval
     func path(in rect: CGRect) -> Path {
-        return squiggles(in: rect)
+        return ovals(in: rect)
     }
 }
 
-/// Tests the SquiggleShape by drawing each of three sets of squiggles: a SquiggleShape with one squiggle; a SquiggleShape with
-/// two squiggles, and a SquiggleShape with three squiggles. Because all squiggles should be the same size, regardless of the number,
+/// Tests the OvalShape by drawing each of three sets of ovals: a OvalShape with one oval; a OvalShape with
+/// two ovals, and a OvalShape with three ovals. Because all ovals should be the same size, regardless of the number,
 /// the first is drawn in a rectangle one third the height of the last, and the second in a rectangle 2/3 the height of the last, with each one
 /// centererd vertically.  Additional rects and dots are drawn for debugging purposes, if debuggingn is true
-struct SquiggleView: View {
+struct OvalView: View {
     let debugging = false
-    let color: Color = .red
+    let color: Color = .green
     var body: some View {
         VStack {
             GeometryReader { geometry in
@@ -398,16 +378,16 @@ struct SquiggleView: View {
                                        width: geometry.size.width,
                                        height: geometry.size.height)
                     
-                    // so that the squiggles in all three rects remain the same size,
-                    // make this one, with only one squiggle, one third the height of the
+                    // so that the ovals in all three rects remain the same size,
+                    // make this one, with only one oval, one third the height of the
                     // whole rect, and center it one third of the way down the rect
-                    let squiggleRect = CGRect(x:0,
+                    let ovalRect = CGRect(x:0,
                                       y: 0 + wholeRect.height/3,
                                       width: wholeRect.width,
                                       height: wholeRect.height/3)
 
-                    SquiggleShape()
-                        .path(in: squiggleRect)
+                    OvalShape()
+                        .path(in: ovalRect)
                         .strokedPath(StrokeStyle(lineWidth: 3.0))
                         .foregroundColor(color)
                     
@@ -416,10 +396,10 @@ struct SquiggleView: View {
                             .path(in: wholeRect)
                             .strokedPath(StrokeStyle(lineWidth: 3.0))
                         Rectangle()
-                            .path(in: squiggleRect)
+                            .path(in: ovalRect)
                             .opacity(0.1)
-                        SquiggleShape()
-                            .debugViews(in: squiggleRect, with: [.red, .purple, .green, .blue])
+                        OvalShape()
+                            .debugViews(in: ovalRect, with: [.red, .purple, .green, .blue])
                     }
                     Spacer()
                 }
@@ -431,16 +411,16 @@ struct SquiggleView: View {
                                        y: 0,
                                        width: geometry.size.width,
                                        height: geometry.size.height)
-                    
-                    // so that the squiggles in all three rects remain the same size,
-                    // make this one, with only two squiggles, two thirds the height of the
+
+                    // so that the ovals in all three rects remain the same size,
+                    // make this one, with only two ovals, two thirds the height of the
                     // whole rect, and center it one sixth of the way down the rect
-                    let squiggleRect = CGRect(x:0,
+                    let ovalRect = CGRect(x:0,
                                        y: 0 + wholeRect.height/6,
                                        width: wholeRect.width,
                                        height: wholeRect.height*2/3)
-                    SquiggleShape(2)
-                        .path(in: squiggleRect)
+                    OvalShape(2)
+                        .path(in: ovalRect)
                         .foregroundColor(color)
 
                     if debugging {
@@ -448,62 +428,51 @@ struct SquiggleView: View {
                             .path(in: wholeRect)
                             .strokedPath(StrokeStyle(lineWidth: 3.0))
                         Rectangle()
-                            .path(in: squiggleRect)
+                            .path(in: ovalRect)
                             .opacity(0.1)
-                        SquiggleShape(2)
-                            .debugViews(in: squiggleRect, with: [.orange, .purple, .teal, .cyan])
+                        OvalShape(2)
+                            .debugViews(in: ovalRect, with: [.orange, .purple, .teal, .cyan])
                     }
                     Spacer()
                 }
             }
             GeometryReader {geometry3 in
                 ZStack {
-                    let squiggleRect = CGRect(x:0,
+                    let ovalRect = CGRect(x:0,
                                       y: 0,
                                       width: geometry3.size.width,
                                       height: geometry3.size.height)
                     let image = Image(systemName: "circle.grid.3x3")
-                    SquiggleShape(3)
-                        .path(in: squiggleRect)
+                    OvalShape(3)
+                        .path(in: ovalRect)
                         .foregroundColor(color)
                         .opacity(0.65)
-                    SquiggleShape(3)
-                        .path(in: squiggleRect)
+                    OvalShape(3)
+                        .path(in: ovalRect)
                         .foregroundStyle(.image(image))
                         .opacity(0.55)
-                    
+
                     if debugging {
                         Rectangle()
-                            .path(in: squiggleRect)
+                            .path(in: ovalRect)
                             .strokedPath(StrokeStyle(lineWidth: 3.0))
                         Rectangle()
-                            .path(in: squiggleRect)
+                            .path(in: ovalRect)
                             .opacity(0.1)
-                        SquiggleShape(3)
-                            .debugViews(in: squiggleRect, with: [.red, .purple, .green, .blue])
+                        OvalShape(3)
+                            .debugViews(in: ovalRect, with: [.red, .purple, .green, .blue])
                         .opacity(0.75)
                     }
                     Spacer()
                 }
             }
-//            Canvas { context, size in
-//                let rect = CGRect(origin: .zero, size: size)
-//                let path = SquiggleShape(3).path(in: rect)
-//                let gradient = Gradient(colors: [.green, .blue])
-//                let from = rect.origin
-//                let to = rect.corner
-//
-//                context.stroke(path, with: .color(.blue), lineWidth: 3)
-// //                context.fill(path, with: .linearGradient(gradient, startPoint: from, endPoint: to))
-//                context.fill(path, with: GraphicsContext.Shading.color(.red))
-//            }.shadow(radius: 5.0)
         }
         .padding()
     }
 }
 
-struct SquiggleShape_Previews: PreviewProvider {
+struct OvalShape_Previews: PreviewProvider {
     static var previews: some View {
-        SquiggleView()
+        OvalView()
     }
 }

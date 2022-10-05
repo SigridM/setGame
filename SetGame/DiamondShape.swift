@@ -197,7 +197,7 @@ struct DiamondShape: Shape {
 /// centererd vertically.  Additional rects and dots are drawn for debugging purposes, if debuggingn is true
 struct DiamondView: View {
     let debugging = false
-    let color: Color = .red
+    let color: Color = .blue
     var body: some View {
         VStack {
             GeometryReader { geometry in
