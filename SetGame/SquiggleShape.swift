@@ -66,51 +66,51 @@ struct SquiggleShape: Shape {
         
         /// control points for the high hump of the upper curve, and the low dip of the lower
         /// curve, are equal distance away from the left and right edges, respectively
-        static let innerControlXInset = 33.0
-        static let upperControl1XFactor = innerControlXInset / defaultWidth
-        static let lowerControl1XFactor = (defaultWidth - innerControlXInset) / defaultWidth
+        private static let innerControlXInset = 33.0
+        private static let upperControl1XFactor = innerControlXInset / defaultWidth
+        private static let lowerControl1XFactor = (defaultWidth - innerControlXInset) / defaultWidth
         
         /// control points for the low dip of the upper curve, and the high hump of the lower
         /// curve, are equal distances away from the right and left edges, respectively
-        static let outerControlXInset = 31.0
-        static let upperControl2XFactor = (defaultWidth - outerControlXInset) / defaultWidth
-        static let lowerControl2XFactor = outerControlXInset / defaultWidth
+        private static let outerControlXInset = 31.0
+        private static let upperControl2XFactor = (defaultWidth - outerControlXInset) / defaultWidth
+        private static let lowerControl2XFactor = outerControlXInset / defaultWidth
         
         /// control points for the high hump of the upper curve, and the low dip of the lower
         /// curve, are equal distances above and below the top and bottom edges, respectively
-        static let outerControlYInset = -29.0
-        static let upperControl1YFactor = outerControlYInset / defaultHeight
-        static let lowerControl1YFactor = (defaultHeight - outerControlYInset) / defaultHeight
+        private static let outerControlYInset = -29.0
+        private static let upperControl1YFactor = outerControlYInset / defaultHeight
+        private static let lowerControl1YFactor = (defaultHeight - outerControlYInset) / defaultHeight
         
         /// control points for the low dip of the upper curve, and the high hump of the lower
         /// curve, are equal distances below and above the bottom and top edges, respectively
-        static let innerControlYInset = -24.0
-        static let upperControl2YFactor = (defaultHeight - innerControlYInset) / defaultHeight
-        static let lowerControl2YFactor = innerControlYInset / defaultHeight
+        private static let innerControlYInset = -24.0
+        private static let upperControl2YFactor = (defaultHeight - innerControlYInset) / defaultHeight
+        private static let lowerControl2YFactor = innerControlYInset / defaultHeight
         
         /// control points for the inner parts of the left and right endcaps are the same distance
         /// from the left and right edges, respectively
-        static let innerEndCapYInset = 2.0
-        static let leftCapControl1XFactor = innerEndCapYInset / defaultWidth
-        static let rightCapControl1XFactor = (defaultWidth - innerEndCapYInset) / defaultWidth
+        private static let innerEndCapYInset = 2.0
+        private static let leftCapControl1XFactor = innerEndCapYInset / defaultWidth
+        private static let rightCapControl1XFactor = (defaultWidth - innerEndCapYInset) / defaultWidth
         
         /// control points for the outer parts of the right and left endcaps are the same distance
         /// outside the right and left edges, respectively
-        static let outerEndCapXInset = -1.0
-        static let rightCapControl2XFactor = (defaultWidth - outerEndCapXInset) / defaultWidth
-        static let leftCapControl2XFactor = outerEndCapXInset / defaultWidth
+        private static let outerEndCapXInset = -1.0
+        private static let rightCapControl2XFactor = (defaultWidth - outerEndCapXInset) / defaultWidth
+        private static let leftCapControl2XFactor = outerEndCapXInset / defaultWidth
 
         /// control points for the highest and lowest parts of the right and left endcaps, respectively
         /// are the same distance above and below the top and bottom edges, respectively
-        static let fartherEndCapYInset = -1.0
-        static let rightCapControl1YFactor = fartherEndCapYInset / defaultHeight
-        static let leftCapControl1YFactor = (defaultHeight - fartherEndCapYInset) / defaultHeight
+        private static let fartherEndCapYInset = -1.0
+        private static let rightCapControl1YFactor = fartherEndCapYInset / defaultHeight
+        private static let leftCapControl1YFactor = (defaultHeight - fartherEndCapYInset) / defaultHeight
         
         /// control points for the closer parts of the right and left endcaps are the same distance
         /// inside the top and bottom edges, respectively
-        static let closerEndCapYInset = 0.5
-        static let rightCapControl2YFactor = closerEndCapYInset / defaultHeight
-        static let leftCapControl2YFactor = (defaultHeight - closerEndCapYInset) / defaultHeight
+        private static let closerEndCapYInset = 0.5
+        private static let rightCapControl2YFactor = closerEndCapYInset / defaultHeight
+        private static let leftCapControl2YFactor = (defaultHeight - closerEndCapYInset) / defaultHeight
         
         /// A Dictionary of two-point SegmentControllers, stored by their SquiggleName for readability
         static let controlFactors: [SegmentName: SegmentController] = [
