@@ -20,35 +20,37 @@ extension SetFeature {
         return false
     }
 }
-enum ShapeFeature: SetFeature {
-    case triangle
-    case squiggle
-    case diamond
+enum ShapeFeature: Int, SetFeature {
+    case shape1 = 1
+    case shape2 = 2
+    case shape3 = 3
 }
 
-enum ShadeFeature: SetFeature {
-    case outline
-    case shaded
-    case solid
+enum ShadeFeature: Int, SetFeature {
+    case shade1 = 1
+    case shade2 = 2
+    case shade3 = 3
 }
 
-enum ColorFeature: SetFeature {
-    case color1
-    case color2
-    case color3
+enum ColorFeature: Int, SetFeature {
+    case color1 = 1
+    case color2 = 2
+    case color3 = 3
 }
 
-enum NumberFeature: SetFeature {
-    case one
-    case two
-    case three
+enum NumberFeature: Int, SetFeature {
+    case one = 1
+    case two = 2
+    case three = 3
 }
 
-struct Card {
+struct Card: Equatable {
     let shape: ShapeFeature
     let shading: ShadeFeature
     let color: ColorFeature
     let number: NumberFeature
+    
+    var isSelected = false
     
     func formsSetWith(_ secondCard: Card, and thirdCard: Card) -> Bool {
         return
@@ -57,12 +59,23 @@ struct Card {
             self.color.formsSetWith(secondCard.color, and: thirdCard.color) &&
             self.number.formsSetWith(secondCard.number, and: thirdCard.number)
     }
+    
+    mutating func toggleSelection() {
+        isSelected = !isSelected
+    }
+    
+    var id: Int {
+        return shape.rawValue * 1000
+            + shading.rawValue * 100
+            + color.rawValue * 10
+            + number.rawValue
+    }
 }
 
 struct Deck {
     var cards: [Card]
-    var initialDealCount = 12
-    var subsequentDealCount = 3
+    let initialDealCount = 12
+    let subsequentDealCount = 3
     
     static func newDeck() -> Deck {
         var cardArray: [Card] = []
@@ -87,6 +100,75 @@ struct Deck {
     }
 
     mutating func subsequentDeal() -> [Card] {
+        if isEmpty() {
+            return []
+        }
         return cards.popLast(subsequentDealCount)
+    }
+}
+
+struct SetGame {
+    private var deck: Deck
+    var tableau: [Card]
+    
+    var hasSetSelected: Bool {
+        return hasThreeSelected && tableau[0].formsSetWith(tableau[1], and: tableau[2])
+    }
+    
+    var hasThreeSelected: Bool {
+        return numSelected == 3
+    }
+    
+    var numSelected: Int {
+        return selectedCardIndices.count
+    }
+    
+    var selectedCardIndices: [Int] {
+        return tableau.indices(where:{$0.isSelected})
+    }
+    
+    private var theTwoSelectedCards: [Card]? {
+        get {
+            let answer = tableau.filter{$0.isSelected}
+            if answer.count == 2 {
+                return answer
+            }
+            return nil
+        }
+    }
+    
+    mutating func startGame() {
+        deck = Deck.newDeck()
+        tableau = deck.initialDeal()
+    }
+    
+    func canSelect(_ card: Card) -> Bool {
+        return !card.isSelected
+    }
+    
+    func canDeselect(_ card: Card) -> Bool {
+        return card.isSelected && !hasThreeSelected
+    }
+    
+    mutating func select(_ card: Card) {
+        let selectionIndex = tableau.firstIndex(where: {$0 == card})!
+        if canSelect(card) {
+            if hasThreeSelected {
+                if hasSetSelected {
+                    for index in selectedCardIndices.reversed() {
+                        tableau.remove(at: index)
+                    }
+                    tableau += deck.subsequentDeal()
+                } else { // three selected; no set
+                    for index in selectedCardIndices {
+                        tableau[index].toggleSelection()
+                    }
+                }
+            }
+            tableau[selectionIndex].toggleSelection()
+        } else if canDeselect(card) {
+            tableau[selectionIndex].toggleSelection()
+        }
+
     }
 }

@@ -60,6 +60,16 @@ extension Array {
         }
         return answer
     }
+    
+    public func indices(where test: (Element) -> Bool) -> [Int] {
+        var answer: [Int] = []
+        for index in self.indices {
+            if test(self[index]) {
+                answer.append(index)
+            }
+        }
+        return answer
+    }
 }
 
 extension CGPoint {
