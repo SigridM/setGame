@@ -112,11 +112,11 @@ struct SetGame {
     var tableau: [Card]
     
     var hasSetSelected: Bool {
-        return hasThreeSelected && tableau[0].formsSetWith(tableau[1], and: tableau[2])
+        return hasMaxSelected && tableau[0].formsSetWith(tableau[1], and: tableau[2])
     }
     
-    private var hasThreeSelected: Bool {
-        return numSelected == 3
+    private var hasMaxSelected: Bool {
+        return numSelected == SetGameConstants.maxSelection
     }
     
     private var numSelected: Int {
@@ -125,16 +125,6 @@ struct SetGame {
     
     private var selectedCardIndices: [Int] {
         return tableau.indices(where:{$0.isSelected})
-    }
-    
-    private var theTwoSelectedCards: [Card]? {
-        get {
-            let answer = tableau.filter{$0.isSelected}
-            if answer.count == 2 {
-                return answer
-            }
-            return nil
-        }
     }
     
     mutating func startGame() {
@@ -147,22 +137,17 @@ struct SetGame {
     }
     
     func canDeselect(_ card: Card) -> Bool {
-        return card.isSelected && !hasThreeSelected
+        return card.isSelected && !hasMaxSelected
     }
     
     mutating func select(_ card: Card) {
         let selectionIndex = tableau.firstIndex(where: {$0 == card})!
         if canSelect(card) {
-            if hasThreeSelected {
+            if hasMaxSelected {
                 if hasSetSelected {
-                    for index in selectedCardIndices.reversed() {
-                        tableau.remove(at: index)
-                    }
-                    tableau += deck.subsequentDeal()
-                } else { // three selected; no set
-                    for index in selectedCardIndices {
-                        tableau[index].toggleSelection()
-                    }
+                    replaceSelectedSet()
+                } else { // three selected; no set; deselect all
+                    deselectAll()
                 }
             }
             tableau[selectionIndex].toggleSelection()
@@ -172,11 +157,48 @@ struct SetGame {
 
     }
     
+    private mutating func deselectAll() {
+        for index in selectedCardIndices {
+            tableau[index].toggleSelection()
+        }
+    }
+    private mutating func removeSelectedSet() {
+        guard hasSetSelected else {
+            return
+        }
+        for index in selectedCardIndices.reversed() {
+            tableau.remove(at: index)
+        }
+    }
+    
+    private mutating func replaceSelectedSet() {
+        guard hasSetSelected else {
+            return
+        }
+        
+        let newCards = deck.subsequentDeal()
+        if newCards.isEmpty {
+            removeSelectedSet()
+        } else {
+            for index in newCards.indices {
+                tableau[selectedCardIndices[index]] = newCards[index]
+            }
+        }
+    }
+    
     mutating func addCards() {
-        tableau += deck.subsequentDeal()
+        if hasSetSelected {
+            replaceSelectedSet()
+        } else {
+            tableau += deck.subsequentDeal()
+        }
     }
     
     func cardsRemaining() -> Bool {
         return !deck.isEmpty()
     }
+}
+
+struct SetGameConstants {
+    static let maxSelection = 3
 }
