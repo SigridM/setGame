@@ -176,6 +176,12 @@ extension Double {
     }
 }
 
+extension CGSize {
+    public static func -(lhs: CGSize, rhs: Double) -> CGSize {
+        return CGSize(width: lhs.width - rhs, height: lhs.height - rhs)
+    }
+}
+
 extension UIColor {
     
     /// make a diagonal striped pattern

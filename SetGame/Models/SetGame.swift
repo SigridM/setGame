@@ -12,7 +12,7 @@ struct SetGame {
     
     // MARK: - Instance variables
     /// The deck of SetCards from which we will be drawing cards.
-    private var deck: SetDeck
+    private var deck: SetDeck<SetCard>
     
     /// An Array of SetCards that are on the table.
     var tableau: [SetCard]

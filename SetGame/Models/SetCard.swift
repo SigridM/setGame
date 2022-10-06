@@ -10,7 +10,7 @@ import Foundation
 /// A struct for encapsulating the structure and behavior of a single card in the game of Set. Each SetCard has four features (shape,
 /// shading, color, and number of symbols) and can determine whether it forms a set with any other two SetCards. It also has a mutable
 /// state: a Boolean indicating whether the SetCard is currently selected.
-struct SetCard: Equatable {
+struct SetCard: Equatable, Identifiable {
     let shape: ShapeFeature
     let shading: ShadeFeature
     let color: ColorFeature

@@ -9,8 +9,9 @@ import Foundation
 
 /// A structure that encapsulates the standard card deck of a Set game. It can create a new, shuffled deck, can deal the initial number
 /// of cards, can deal the subsequent number of cards, and can report whether it is empty.
-struct SetDeck {
-    var cards: [SetCard]
+struct SetDeck<Element> where Element: Equatable {
+    
+    private(set) var cards: Array<SetCard>
     
     
     /// Factory method for creating a new, shuffled deck of SetCards. Each card is unique, made up of a combination of
