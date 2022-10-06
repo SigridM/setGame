@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// A structure that encapsulates the standard card deck of a Set game. It can create a new, shuffled deck, can deal the initial number
+/// of cards, can deal the subsequent number of cards, and can report whether it is empty.
 struct SetDeck {
     var cards: [SetCard]
     

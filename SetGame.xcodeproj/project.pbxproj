@@ -14,7 +14,7 @@
 		05D7437E28EF247600378BB0 /* SetCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437D28EF247600378BB0 /* SetCard.swift */; };
 		05D7438028EF274D00378BB0 /* SetGameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437F28EF274D00378BB0 /* SetGameConstants.swift */; };
 		05F78B4328E1F540002B2975 /* SetGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B4228E1F540002B2975 /* SetGameApp.swift */; };
-		05F78B4528E1F540002B2975 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B4428E1F540002B2975 /* ContentView.swift */; };
+		05F78B4528E1F540002B2975 /* SetGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B4428E1F540002B2975 /* SetGameView.swift */; };
 		05F78B4728E1F541002B2975 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05F78B4628E1F541002B2975 /* Assets.xcassets */; };
 		05F78B4A28E1F541002B2975 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05F78B4928E1F541002B2975 /* Preview Assets.xcassets */; };
 		05F78B5428E1F541002B2975 /* SetGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F78B5328E1F541002B2975 /* SetGameTests.swift */; };
@@ -51,7 +51,7 @@
 		05D7437F28EF274D00378BB0 /* SetGameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameConstants.swift; sourceTree = "<group>"; };
 		05F78B3F28E1F540002B2975 /* SetGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05F78B4228E1F540002B2975 /* SetGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameApp.swift; sourceTree = "<group>"; };
-		05F78B4428E1F540002B2975 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		05F78B4428E1F540002B2975 /* SetGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameView.swift; sourceTree = "<group>"; };
 		05F78B4628E1F541002B2975 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		05F78B4928E1F541002B2975 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		05F78B4F28E1F541002B2975 /* SetGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SetGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,7 +95,7 @@
 				05D7437228EDCE2200378BB0 /* DiamondShape.swift */,
 				05D7437428EDD95000378BB0 /* OvalShape.swift */,
 				05F78B7028E2263F002B2975 /* SquiggleShape.swift */,
-				05F78B4428E1F540002B2975 /* ContentView.swift */,
+				05F78B4428E1F540002B2975 /* SetGameView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -311,7 +311,7 @@
 				05D7437E28EF247600378BB0 /* SetCard.swift in Sources */,
 				05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */,
 				05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */,
-				05F78B4528E1F540002B2975 /* ContentView.swift in Sources */,
+				05F78B4528E1F540002B2975 /* SetGameView.swift in Sources */,
 				05F78B4328E1F540002B2975 /* SetGameApp.swift in Sources */,
 				05F78B7128E2263F002B2975 /* SquiggleShape.swift in Sources */,
 				05D7438028EF274D00378BB0 /* SetGameConstants.swift in Sources */,
