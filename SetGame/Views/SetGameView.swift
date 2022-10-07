@@ -10,33 +10,22 @@ import SwiftUI
 struct SetGameView: View {
     var body: some View {
         VStack {
-//            let testCard = SetCard(shape: ShapeFeature.shape1,
-//                                   shading: ShadeFeature.shade1,
-//                                   color: ColorFeature.color1,
-//                                   number: NumberFeature.one)
-//            let testCard2 = SetCard(shape: ShapeFeature.shape2,
-//                                   shading: ShadeFeature.shade2,
-//                                   color: ColorFeature.color2,
-//                                   number: NumberFeature.two)
-//            let testCard3 = SetCard(shape: ShapeFeature.shape3,
-//                                    shading: ShadeFeature.shade3,
-//                                    color: ColorFeature.color3,
-//                                    number: NumberFeature.three)
-//            CardView(card: testCard)
-//            CardView(card: testCard2)
-//            CardView(card: testCard3)
-            
-//            ForEach(SetDeck<SetCard>.newVeryLimitedDeck().cards) { card in
-//                CardView(card: card)
-//            }
-            var deck = SetDeck<SetCard>.newLimitedDeck()
-            let cards = deck.initialDeal()
-            AspectVGrid(items: cards, aspectRatio: 2.0/3.0) { card, something in
+            Text("Set Game")
+
+            var deck = SetDeck<SetCard>.newDeck()
+//                    let cards = deck.initialDeal()
+            let cards = deck.cards
+            AspectVGrid(items: cards, aspectRatio: 2.0/3.0, minWidth: 55) { card, something in
                 CardView(card: card)
             }
-
+                
+            Spacer()
+            Button {
+            } label: {
+                Text("Add Cards")
+            }
+            .padding(2.0)
         }
-        .padding()
     }
 }
 
@@ -55,11 +44,14 @@ struct CardView: View {
          GeometryReader { geometry in
             ZStack {
                 let inset = 12.0
-                RoundedRectangle(cornerRadius: inset)
-                    .stroke(style: StrokeStyle(lineWidth: 3))
+                RoundedRectangle(cornerRadius: geometry.size.width / 4.0)
+                    .strokeBorder(style: StrokeStyle(lineWidth: 3))
                     .foregroundColor(colors[card.color.rawValue - 1])
                 viewForCard(in: geometry.size - inset * 2)
                     .padding(EdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset))
+            }
+            .onTapGesture {
+                
             }
         }
     }

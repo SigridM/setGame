@@ -37,22 +37,22 @@ struct SquiggleShape: Shape {
         private static let defaultHeight = 20.0
         
         /// points 0 and 2 are close to the left and right edges, respectively
-        private static let outmostPointXInset = 1.0
+        private static let outmostPointXInset = 6.0
         private static let point0XFactor = outmostPointXInset / defaultWidth
         private static let point2XFactor = (defaultWidth - outmostPointXInset) / defaultWidth
         
         /// points 1 and 3 are slightly farther from the right and left edges, respectively
-        private static let secondPointXInset = 4.0
+        private static let secondPointXInset = 6.0
         private static let point1XFactor = (defaultWidth - secondPointXInset) / defaultWidth
         private static let point3XFactor = secondPointXInset / defaultWidth
         
         /// points 1 and 3 are close to the top and bottom, respectively
-        private static let outmostPointYInset = 2.0
+        private static let outmostPointYInset = 4.0
         private static let point1YFactor = outmostPointYInset / defaultHeight
         private static let point3YFactor = (defaultHeight - outmostPointYInset) / defaultHeight
         
         /// points 0 and 2 are slightly farther from the bottom and top, respectively
-        private static let secondPointYInset = 4.0
+        private static let secondPointYInset = 11.0
         private static let point0YFactor = (defaultHeight - secondPointYInset) / defaultHeight
         private static let point2YFactor = secondPointYInset / defaultHeight
         
@@ -72,7 +72,7 @@ struct SquiggleShape: Shape {
         
         /// control points for the low dip of the upper curve, and the high hump of the lower
         /// curve, are equal distances away from the right and left edges, respectively
-        private static let outerControlXInset = 31.0
+        private static let outerControlXInset = innerControlXInset - 2.0
         private static let upperControl2XFactor = (defaultWidth - outerControlXInset) / defaultWidth
         private static let lowerControl2XFactor = outerControlXInset / defaultWidth
         
@@ -84,7 +84,7 @@ struct SquiggleShape: Shape {
         
         /// control points for the low dip of the upper curve, and the high hump of the lower
         /// curve, are equal distances below and above the bottom and top edges, respectively
-        private static let innerControlYInset = -24.0
+        private static let innerControlYInset = outerControlYInset + 15
         private static let upperControl2YFactor = (defaultHeight - innerControlYInset) / defaultHeight
         private static let lowerControl2YFactor = innerControlYInset / defaultHeight
         

@@ -47,7 +47,7 @@ struct SetDeck<Element> where Element: Equatable {
                     cardArray.append(SetCard(shape: shape,
                                              shading: shading,
                                              color: color,
-                                             number: NumberFeature.one))
+                                             number: NumberFeature.three))
                 }
             }
         }
