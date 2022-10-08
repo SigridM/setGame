@@ -17,6 +17,7 @@ struct SetCard: Equatable, Identifiable {
     let number: NumberFeature
     
     var isSelected = false
+    var isPartOfSet = false
     
     /// Answers a Boolean: whether the receiver forms a set with two other cards.
     /// - Parameters:

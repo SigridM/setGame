@@ -17,9 +17,12 @@ struct SetGame {
     /// An Array of SetCards that are on the table.
     var tableau: [SetCard]
     
+    // MARK: Computed inst vars
     /// A Boolean that is true if we have a selection containing a full set.
     var hasSetSelected: Bool {
-        hasMaxSelected && tableau[0].formsSetWith(tableau[1], and: tableau[2])
+        let indices = selectedCardIndices
+        return hasMaxSelected && tableau[indices[0]]
+            .formsSetWith(tableau[indices[1]], and: tableau[indices[2]])
     }
     
     /// A Boolean that is true if we already have selected the maximum number of cards that are allowed to be
@@ -78,7 +81,11 @@ struct SetGame {
         } else if canDeselect(card) {
             tableau[selectionIndex].toggleSelection()
         }
-        
+        if hasSetSelected {
+            for index in selectedCardIndices {
+                tableau[index].isPartOfSet = true
+            }
+        }
     }
     
     /// Remove the selection status from all the cards that are selected
@@ -111,13 +118,19 @@ struct SetGame {
         if newCards.isEmpty {
             removeSelectedSet()
         } else {
+            let selectedIndices = selectedCardIndices
             for index in newCards.indices {
-                tableau[selectedCardIndices[index]] = newCards[index]
+                tableau[selectedIndices[index]] = newCards[index]
             }
         }
     }
     
     // MARK: Public Functions
+    
+    init() {
+        deck = SetDeck.newDeck()
+        tableau = deck.initialDeal()
+    }
     
     /// Begin the game by getting a new, shuffled deck of cards and putting the initial deal from those cards onto the tableau
     mutating func startGame() {

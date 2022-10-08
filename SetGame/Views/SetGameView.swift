@@ -8,23 +8,32 @@
 import SwiftUI
 
 struct SetGameView: View {
+    @ObservedObject var game = SetGameViewModel()
+    
     var body: some View {
         VStack {
             Text("Set Game")
 
-            var deck = SetDeck<SetCard>.newDeck()
-//                    let cards = deck.initialDeal()
-            let cards = deck.cards
-            AspectVGrid(items: cards, aspectRatio: 2.0/3.0, minWidth: 55) { card, something in
+            AspectVGrid(items: game.cards(), aspectRatio: 2.0/3.0, minWidth: 55) { card, width in
                 CardView(card: card)
+                    .onTapGesture {
+                        game.select(card: card)
+                    }
             }
                 
             Spacer()
-            Button {
-            } label: {
-                Text("Add Cards")
+            HStack {
+                cardAdder
             }
-            .padding(2.0)
+//            .padding(2.0)
+        }
+    }
+    
+    var cardAdder: some View {
+        Button {
+            game.addCards()
+        } label: {
+            Text("Add Cards")
         }
     }
 }
@@ -39,21 +48,33 @@ struct CardView: View {
     let card: SetCard
     private let colors: [Color] = [.red, .green, .blue]
     
-    
     var body: some View {
          GeometryReader { geometry in
-            ZStack {
+            let answer = ZStack {
                 let inset = 12.0
-                RoundedRectangle(cornerRadius: geometry.size.width / 4.0)
-                    .strokeBorder(style: StrokeStyle(lineWidth: 3))
-                    .foregroundColor(colors[card.color.rawValue - 1])
+                rectForCard(in: geometry.size)
                 viewForCard(in: geometry.size - inset * 2)
                     .padding(EdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset))
             }
-            .onTapGesture {
-                
-            }
+             if card.isPartOfSet {
+                 answer.opacity(0.25)
+             } else {
+                 answer.opacity(1.0)
+             }
         }
+    }
+    
+    private func rectForCard(in size: CGSize) -> some View {
+        var borderWidth: Double
+        if card.isSelected {
+            borderWidth = 6.0
+        } else {
+            borderWidth = 3.0
+        }
+        let rect = RoundedRectangle(cornerRadius: size.width / 4.0)
+                .strokeBorder(style: StrokeStyle(lineWidth: borderWidth))
+                .foregroundColor(colors[card.color.rawValue - 1])
+        return rect
     }
     
     @ViewBuilder
