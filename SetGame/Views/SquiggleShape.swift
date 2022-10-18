@@ -37,12 +37,12 @@ struct SquiggleShape: Shape {
         private static let defaultHeight = 20.0
         
         /// points 0 and 2 are close to the left and right edges, respectively
-        private static let outmostPointXInset = 6.0
+        private static let outmostPointXInset = 8.0
         private static let point0XFactor = outmostPointXInset / defaultWidth
         private static let point2XFactor = (defaultWidth - outmostPointXInset) / defaultWidth
         
         /// points 1 and 3 are slightly farther from the right and left edges, respectively
-        private static let secondPointXInset = 6.0
+        private static let secondPointXInset = 8.0
         private static let point1XFactor = (defaultWidth - secondPointXInset) / defaultWidth
         private static let point3XFactor = secondPointXInset / defaultWidth
         
@@ -52,7 +52,7 @@ struct SquiggleShape: Shape {
         private static let point3YFactor = (defaultHeight - outmostPointYInset) / defaultHeight
         
         /// points 0 and 2 are slightly farther from the bottom and top, respectively
-        private static let secondPointYInset = 11.0
+        private static let secondPointYInset = 10.0
         private static let point0YFactor = (defaultHeight - secondPointYInset) / defaultHeight
         private static let point2YFactor = secondPointYInset / defaultHeight
         
@@ -78,7 +78,7 @@ struct SquiggleShape: Shape {
         
         /// control points for the high hump of the upper curve, and the low dip of the lower
         /// curve, are equal distances above and below the top and bottom edges, respectively
-        private static let outerControlYInset = -29.0
+        private static let outerControlYInset = -15.0
         private static let upperControl1YFactor = outerControlYInset / defaultHeight
         private static let lowerControl1YFactor = (defaultHeight - outerControlYInset) / defaultHeight
         
@@ -387,7 +387,7 @@ struct SquiggleShape: Shape {
 /// the first is drawn in a rectangle one third the height of the last, and the second in a rectangle 2/3 the height of the last, with each one
 /// centererd vertically.  Additional rects and dots are drawn for debugging purposes, if debuggingn is true
 struct SquiggleView: View {
-    let debugging = false
+    let debugging = true
     let color: Color = .red
     var body: some View {
         VStack {

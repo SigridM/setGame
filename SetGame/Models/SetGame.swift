@@ -14,6 +14,8 @@ struct SetGame {
     /// The deck of SetCards from which we will be drawing cards.
     private var deck: SetDeck<SetCard>
     
+    private var state: SelectionState
+    
     /// An Array of SetCards that are on the table.
     var tableau: [SetCard]
     
@@ -27,7 +29,7 @@ struct SetGame {
     
     /// A Boolean that is true if we already have selected the maximum number of cards that are allowed to be
     /// selected at one time.
-    private var hasMaxSelected: Bool {
+     private var hasMaxSelected: Bool {
         numSelected == SetGameConstants.setSize
     }
     
@@ -60,40 +62,13 @@ struct SetGame {
         card.isSelected && !hasMaxSelected
     }
     
-    /// React to the selection of a particular card.
-    /// A card can only be selected if it is not already selected. If that is the case:
-    ///     1. If a set is already successfully selected, replace the selected set with a subsequent deal
-    ///     2. If the maximum number of cards are selected that don't form a set, deselect all of those cards
-    ///     In either case, select the given card.
-    /// If a card cannot be selected because it is already selected, try to deselect the card. This can only
-    /// happen if we don't already have the maximum number of cards selected. If there are already the
-    /// maximum selected, attempting to deselect a selected card has no effect.
-    /// - Parameter card: the SetCard attempting to be selected or deselected
-    mutating func select(_ card: SetCard) {
-        let selectionIndex = tableau.firstIndex(where: {$0 == card})!
-        if canSelect(card) {
-            if hasSetSelected {
-                replaceSelectedSet()
-            } else if hasMaxSelected { // three selected; no set; deselect all
-                deselectAll()
-            }
-            tableau[selectionIndex].toggleSelection()
-        } else if canDeselect(card) {
-            tableau[selectionIndex].toggleSelection()
-        }
-        if hasSetSelected {
-            for index in selectedCardIndices {
-                tableau[index].isPartOfSet = true
-            }
-        }
-    }
-    
-    /// Remove the selection status from all the cards that are selected
-    private mutating func deselectAll() {
+     /// Remove the selection status from all the cards that are selected
+    mutating func deselectAll() {
         for index in selectedCardIndices {
             tableau[index].toggleSelection()
         }
     }
+    
     /// If there is a selected set, remove it from the tableau
     private mutating func removeSelectedSet() {
         guard hasSetSelected else {
@@ -128,20 +103,22 @@ struct SetGame {
     // MARK: Public Functions
     
     init() {
-        deck = SetDeck.newDeck()
+        deck = SetDeck.newLimitedDeck()
         tableau = deck.initialDeal()
+        state = .lessThanMaxSelected
     }
     
     /// Begin the game by getting a new, shuffled deck of cards and putting the initial deal from those cards onto the tableau
     mutating func startGame() {
-        deck = SetDeck.newDeck()
+        deck = SetDeck.newLimitedDeck()
         tableau = deck.initialDeal()
+        state = .lessThanMaxSelected
     }
     
     /// Answers a Boolean: whether a game is already in progress
     /// - Returns: a Boolean for whether the game has begun
     func gameHasBegun() -> Bool {
-        !tableau.isEmpty
+        !tableau.isEmpty && !gameOver()
     }
     
     /// Add a subsequent deal to the tableau. If we have a set selected already, replace that set with the new
@@ -154,7 +131,89 @@ struct SetGame {
             tableau += deck.subsequentDeal()
         }
     }
+    /// React to the selection of a particular card. This will be done by moving from the current selection state to the
+    /// next selection state. See SelectionState for details.
+    /// - Parameter card: the SetCard attempting to be selected or deselected
+    mutating func select(_ card: SetCard) {
+        let selectionIndex = tableau.firstIndex(where: {$0.id == card.id})!
+        state = state.goToNextState(selectedAt: selectionIndex, in: &self)
+    }
     
+    /// Iterates through each card that is currently selected and performs the given action on that card
+    /// - Parameter action: a closure that modifies the given card
+    mutating func forSelectionsDo(_ action: (inout SetCard) -> Void) {
+        for index in selectedCardIndices {
+            action(&tableau[index])
+        }
+    }
+    
+    /// Deselects all the selected cards in the tableau and then selects the card at the given index
+    /// - Parameter index: an Int for the given index
+    mutating func selectOnlyAt(_ index: Int) {
+        deselectAll()
+        tableau[index].select()
+    }
+    
+    enum SelectionState {
+        case lessThanMaxSelected
+        case maxSelectedAsSet
+        case maxSelectedAsNonSet
+        
+        /// Move from the current state to the next state, based on what happens as a result of selecting the card at
+        /// the given index in the given game.
+        ///
+        /// If we have less than max selected, we can always toggle the selection at the given index. After that, though,
+        /// the next state will depend on how many are now selected and whether the selection forms a set. After determining which
+        /// state to go to next, make certain the cards know whether or not they are part of a set or non-set and return the next
+        /// state.
+        ///
+        /// If we have the max selected, it is either because we have a set selected or a non-set selected. In either case,
+        /// the next state will retun to .lessThanMaxSelected. But before that, the game must either replace the selected set
+        /// or select only at the current selection. Do that, then return the new state.
+        ///
+        /// - Parameters:
+        ///   - index: an Int that is an index into the game's tableau of the current selection
+        ///   - game: the SetGame holding onto the current state
+        /// - Returns: a SelectionState that is the next state to which we are transitioning
+        func goToNextState(selectedAt index: Int, in game: inout SetGame) -> SelectionState {
+            switch self {
+                case .lessThanMaxSelected :
+                    // if less than the maximum selected, we can always toggle the selection
+                    game.tableau[index].toggleSelection()
+                    
+                    // then, see what state to go to next
+                    if !game.hasMaxSelected {
+                        return .lessThanMaxSelected
+                    }
+                    if game.hasSetSelected {
+                        game.forSelectionsDo{card in card.makePartOfSet()}
+                        return .maxSelectedAsSet
+                    } else {
+                        game.forSelectionsDo{card in card.makePartOfNonSet()}
+                        return .maxSelectedAsNonSet
+                    }
+                    
+                case .maxSelectedAsSet :
+                    game.replaceSelectedSet()
+                    return .lessThanMaxSelected
+                    
+                case .maxSelectedAsNonSet :
+                    game.selectOnlyAt(index)  // select only the clicked card
+                    return .lessThanMaxSelected
+            }
+        }
+    }
+    
+    
+    /// Answers a Boolean: whether or not there are the maximum number of cards selected, but they do not form a proper set
+    /// - Returns: a Bool for whether a full non-set is selected
+    func hasFullNonSetSelected() -> Bool {
+        if !hasMaxSelected { return false}
+        for index in selectedCardIndices {
+            if !tableau[index].isPartOfNonSet {return false}
+        }
+        return true
+    }
     /// Answers whether or not there are any cards remaining to be dealt
     /// - Returns: a Boolean for whether or not there are cards remaining to be dealt
     func cardsRemainingInDeck() -> Bool {
@@ -167,7 +226,7 @@ struct SetGame {
         // optimization: the smallest possible cap set is 20 cards; if more than that, there must
         // be a set (no cap set)
         if tableau.count > 20 {return false}
-        return setOnTableau() != nil
+        return setOnTableau() == nil
     }
     
     /// Answers whether the game is complete: either all cards have been made into a set, or there are no more sets.
@@ -175,7 +234,7 @@ struct SetGame {
     func gameOver() -> Bool {
         if !deck.isEmpty() {return false} //game can't be over if there are still more cards to deal
         return
-            (tableau.count <= SetGameConstants.setSize)
+            (tableau.count < SetGameConstants.setSize)
             || hasCapSet()
     }
     
@@ -193,4 +252,29 @@ struct SetGame {
         }
         return nil // Got all the way through without finding a set
     }
+    
+    /// Searches for a set on the tableau and returns the indices into that set, if there is one, otherwise returns nil
+    /// - Returns: An array of Ints that are the indices of the first three SetCards forming a set, if there is one, otherwise nil
+    private func indicesOfSetOnTableau() -> [Int]? {
+        for i in tableau.indices {
+            for j in i+1..<tableau.count {
+                for k in j+1..<tableau.count {
+                    if tableau[i].formsSetWith(tableau[j], and: tableau[k]) {
+                        return [i, j, k]
+                    }
+                }
+            }
+        }
+        return nil // Got all the way through without finding a set
+    }
+    
+    /// As part of a hint, find the first proper set on the table and select those cards.
+    mutating func selectFirstSetOnTableau() {
+        if let indices = indicesOfSetOnTableau() {
+            for index in indices {
+                tableau[index].isSelected = true
+            }
+        }
+    }
+    
 }

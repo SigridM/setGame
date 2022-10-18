@@ -12,7 +12,15 @@ struct SetGameView: View {
     
     var body: some View {
         VStack {
-            Text("Set Game")
+            if game.isOver() {
+                Text("Set Game - OVER!")
+            } else if game.hasCapSet() {
+                Text("Set Game (Add cards!)")
+            } else if game.hasFullNonSetSelected() {
+                Text("Set Game: Nope!")
+            } else {
+                Text("Set Game")
+            }
 
             AspectVGrid(items: game.cards(), aspectRatio: 2.0/3.0, minWidth: 55) { card, width in
                 CardView(card: card)
@@ -23,7 +31,13 @@ struct SetGameView: View {
                 
             Spacer()
             HStack {
+                Spacer()
                 cardAdder
+                Spacer()
+                newGameInitiator
+                Spacer()
+                hinter
+                Spacer()
             }
 //            .padding(2.0)
         }
@@ -34,6 +48,24 @@ struct SetGameView: View {
             game.addCards()
         } label: {
             Text("Add Cards")
+        }
+        .disabled(game.deckEmpty())
+    }
+    
+    var hinter: some View {
+        Button {
+            game.showHint()
+        } label: {
+            Text("Show Hint")
+        }
+        .disabled(game.isOver())
+    }
+    
+    var newGameInitiator: some View {
+        Button {
+            game.newGame()
+        } label: {
+            Text("New Game")
         }
     }
 }
@@ -61,19 +93,26 @@ struct CardView: View {
              } else {
                  answer.opacity(1.0)
              }
+
         }
     }
     
     private func rectForCard(in size: CGSize) -> some View {
         var borderWidth: Double
+        var color: Color
         if card.isSelected {
             borderWidth = 6.0
         } else {
             borderWidth = 3.0
         }
+        if card.isPartOfNonSet {
+            color = .black
+        } else {
+            color = .gray // colors[card.color.rawValue]
+        }
         let rect = RoundedRectangle(cornerRadius: size.width / 4.0)
                 .strokeBorder(style: StrokeStyle(lineWidth: borderWidth))
-                .foregroundColor(colors[card.color.rawValue - 1])
+                .foregroundColor(color)
         return rect
     }
     
@@ -84,7 +123,7 @@ struct CardView: View {
             case .shade1 : // patterned (shaded)
                 let image = Image(systemName: "circle.grid.3x3")
                 let bottomView = pathForCard(in: size)
-                    .foregroundColor(colors[card.color.rawValue - 1])
+                    .foregroundColor(colors[card.color.rawValue])
                     .opacity(0.65)
                 let topView = pathForCard(in: size)
                     .foregroundStyle(.image(image))
@@ -96,16 +135,18 @@ struct CardView: View {
             case.shade2 :  // stroked (outlined)
                 pathForCard(in: size)
                     .strokedPath(StrokeStyle(lineWidth: 3.0))
-                    .foregroundColor(colors[card.color.rawValue - 1])
+                    .foregroundColor(colors[card.color.rawValue])
             case .shade3 : // filled
                 pathForCard(in: size)
-                    .foregroundColor(colors[card.color.rawValue - 1])
+                    .foregroundColor(colors[card.color.rawValue])
         }
 
     }
     
     private func pathForCard(in size: CGSize) -> Path {
-        let height = size.height * Double(card.number.rawValue) / Double(NumberFeature.allCases.count)
+        let height = size.height *
+            Double(card.number.rawValue) / Double(NumberFeature.allCases.count) -
+        2.0
         let top = (size.height - height) / 2.0 // centered vertically
         let shapeRect = CGRect(x:0,
                                y: top,

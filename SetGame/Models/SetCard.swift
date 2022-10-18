@@ -11,13 +11,16 @@ import Foundation
 /// shading, color, and number of symbols) and can determine whether it forms a set with any other two SetCards. It also has a mutable
 /// state: a Boolean indicating whether the SetCard is currently selected.
 struct SetCard: Equatable, Identifiable {
+    /// Each card has four features: shape, shading, color and number
     let shape: ShapeFeature
     let shading: ShadeFeature
     let color: ColorFeature
     let number: NumberFeature
     
+    /// Each card starts out unselected and not part of either a correct set or a non-set
     var isSelected = false
     var isPartOfSet = false
+    var isPartOfNonSet = false
     
     /// Answers a Boolean: whether the receiver forms a set with two other cards.
     /// - Parameters:
@@ -36,12 +39,36 @@ struct SetCard: Equatable, Identifiable {
             self.number.formsSetWith(secondCard.number, and: thirdCard.number)
     }
     
-    /// Turns selection on if it is off, and vice versa
+    /// Turns selection on if it is off, and vice versa. If we've turned our selection off, we must no longer be part
+    /// of either a set or non-set, so make those false as a side effect.
     mutating func toggleSelection() {
         isSelected = !isSelected
+        if !isSelected {
+            isPartOfSet = false
+            isPartOfNonSet = false
+        }
     }
     
-    /// A unique Int that identifies a single SetCard
+    /// We form a set with two oither cards. Make note of that so we can somehow inform the user of this fact. Also, if we
+    /// are part of a set, we cannot be part of a non-set, so change that, too.
+    mutating func makePartOfSet() {
+        isPartOfSet = true
+        isPartOfNonSet = false
+    }
+    
+    /// We form a non-set with two oither cards. Make note of that so we can somehow inform the user of this fact. Also, if we
+    /// are part of a non-set, we cannot be part of a set, so change that, too.
+    mutating func makePartOfNonSet() {
+        isPartOfNonSet = true
+        isPartOfSet = false
+    }
+    
+    /// Turn on our seletion status, regardless of whether it was on before.
+    mutating func select() {
+        isSelected = true
+    }
+    
+    /// Calculates and returns an Int that uniquely identifies a single SetCard
     var id: Int {
         return shape.rawValue * 1000
         + shading.rawValue * 100
