@@ -49,13 +49,16 @@ class SetGameViewModel: ObservableObject {
     
     /// Indicate to the user the location of a set on the table. This is done by momentarily flashing the selection of that set.
     func showHint() {
+        if !model.hasCapSet() {
+            model.decreaseScore()
+        }
         model.deselectAll()
         model.selectFirstSetOnTableau()
         let secondsToDelay = 1.0
         DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
             self.model.deselectAll()
         }
-        model.decreaseScore()
+
     }
     
     /// Answers a Boolean, whether or not the game is complete, with no more sets available to make
