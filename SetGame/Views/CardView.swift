@@ -9,25 +9,27 @@ import SwiftUI
 
 /// The view for a single card in a game of Set
 struct CardView: View {
+    /// The model of a single card
     let card: SetCard
-    private let colors: [Color] = [.red, .green, .blue]
+    /// The width calculated for the card by the grid in which it lives
+    let width: CGFloat
     
+    /// Creates and returns the main view for a single Set Card
     var body: some View {
-        GeometryReader { geometry in
-            let answer = ZStack {
-                let inset = ViewConstants.inset
-                rectForCard(in: geometry.size)
-                viewForCard(in: geometry.size - inset * 2) // inset is doubled because
-                                                           // it is on all sides
-                    .padding(EdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset))
-            }
-            if card.isPartOfSet {
-                answer.opacity(ViewConstants.partOfSetOpacity)
-            } else {
-                answer.opacity(ViewConstants.notInSetOpacity)
-            }
-            
+        let size = CGSize(width: width, height: width / ViewConstants.cardAspectRatio)
+        let answer = ZStack {
+            let inset = ViewConstants.inset
+            rectForCard(in: size)
+            viewForCard(in: size - inset * 2) // inset is doubled because
+                                                       // it is on all sides
+                .padding(EdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset))
         }
+        if card.isPartOfSet {
+            answer.opacity(ViewConstants.partOfSetOpacity)
+        } else {
+            answer.opacity(ViewConstants.notInSetOpacity)
+        }
+            
     }
     
     /// Gives the  RoundedRect that makes up the background for a single CardView
@@ -65,7 +67,7 @@ struct CardView: View {
             case .shade1 : // patterned (shaded)
                 let image = ViewConstants.shadingPatternImage
                 let bottomView = pathForCard(in: size)
-                    .foregroundColor(colors[card.color.rawValue])
+                    .foregroundColor(ViewConstants.cardColors[card.color.rawValue])
                     .opacity(ViewConstants.shadedBottomLayerOpacity)
                 let topView = pathForCard(in: size)
                     .foregroundStyle(.image(image))
@@ -77,10 +79,10 @@ struct CardView: View {
             case.shade2 :  // stroked (outlined)
                 pathForCard(in: size)
                     .strokedPath(StrokeStyle(lineWidth: ViewConstants.cardBorderWidth))
-                    .foregroundColor(colors[card.color.rawValue])
+                    .foregroundColor(ViewConstants.cardColors[card.color.rawValue])
             case .shade3 : // filled
                 pathForCard(in: size)
-                    .foregroundColor(colors[card.color.rawValue])
+                    .foregroundColor(ViewConstants.cardColors[card.color.rawValue])
         }
         
     }

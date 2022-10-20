@@ -27,7 +27,7 @@ struct SetGameView: View {
                 items: game.cards(),
                 aspectRatio: ViewConstants.cardAspectRatio,
                 minWidth: ViewConstants.minCardWidth) { card, width in
-                    CardView(card: card)
+                    CardView(card: card, width: width)
                         .onTapGesture {
                             game.select(card: card)
                         }

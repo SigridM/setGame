@@ -69,4 +69,7 @@ struct ViewConstants {
     
     /// A Double that reduces the size of a shape relative to the size of the rect it is in for a single card
     static let inset = 12.0
+    
+    /// The three different colors that cards can be
+    static let cardColors = [Color.red, Color.green, Color.blue]
 } // end ViewConstants
