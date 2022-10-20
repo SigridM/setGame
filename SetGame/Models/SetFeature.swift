@@ -53,6 +53,7 @@ enum ShadeFeature: Int, SetFeature {
 }
 
 /// A SetFeature that is one of three different colors. Has a rawValue so the feature can be used to form a unique ID for a SetCard.
+/// Made zero-relative so it can be used as an index into an array.
 enum ColorFeature: Int, SetFeature {
     case color1 = 0
     case color2 = 1

@@ -1,5 +1,5 @@
 //
-//  AspectVGrid.swift
+//  MinWidthAspectVGrid.swift
 //  Memorize
 //
 //  Created by Sigrid Mortensen on 9/21/22.
@@ -7,12 +7,28 @@
 
 import SwiftUI
 
-struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiable {
+/// Like AspectVGrid, MinWidthAspectVGrid maintains the aspect ratio of its contents while maximizing the number of items
+/// in the grid to avoid scrolling if possible. Unlike AspectVGrid, it will allow vertical scrolling if there are enough items that the
+/// width of each item would fall below the given minimum width.
+struct MinWidthAspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiable {
+    /// The models whose view representations are laid out in a grid
     var items: [Item]
+    
+    /// The ratio of width to height that will be maintained
     var aspectRatio: CGFloat
+    
+    /// The width below which each item must not fall
     var minWidth: CGFloat
+    
+    /// The closure that converts each model in the grid into a view, given the model and the currently calculated width.
     var content: (Item, CGFloat) -> ItemView
-
+    
+    /// Initializes the receiver
+    /// - Parameters:
+    ///   - items: an array of any identifiable item: the models that are being displayed in the grid
+    ///   - aspectRatio: the CGFloat that defines the proportion of width of each item's view to the height of that view
+    ///   - minWidth: the CGFloat that is the minimum width below which the width of each view in the grid must not fall
+    ///   - content: the closure that provides a View for each item, given the model and the calculated width for that item's view
     init(items: [Item],
          aspectRatio: CGFloat,
          minWidth: CGFloat,
@@ -25,6 +41,8 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
     
     
     
+    /// Calculates and returns the View for the grid. This may be either a static (non-scrolling) view or a ScrollView, depending
+    /// on how many items there are and whether they need to be constrained by the minWidth
     var body: some View {
         GeometryReader { geometry in
 
@@ -42,16 +60,20 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
         }
     }
     
+    /// If there are enough items in the grid that the view must scroll, this function returns the ScrollView containing the grid
+    /// with all the items' views in it
+    /// - Parameter cardWidth: the calculated width for each item's view
+    /// - Returns: a ScrollView containing a grid with all of the items' views in it
     private func scrollView(cardWidth: CGFloat) -> some View {
         ScrollView(.vertical, showsIndicators: true) {
-            LazyVGrid(columns: [gridItemOf(width: cardWidth)]) {
-                ForEach(items) {item in
-                    content(item, cardWidth).aspectRatio(aspectRatio, contentMode: .fit)
-                }
-            }
+            staticView(cardWidth: cardWidth)
         }
     }
     
+    /// If there is enough room, vertically, for all the items in the grid without hitting the minimum width for each item's view, this
+    /// function returns just the grid containing the views for each item
+    /// - Parameter cardWidth: the calculated width for each item's view
+    /// - Returns: a LazyVGrid containing the view for each item
     private func staticView(cardWidth: CGFloat) -> some View {
         LazyVGrid(columns: [gridItemOf(width: cardWidth)]) {
             ForEach(items) {item in
@@ -60,6 +82,11 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
         }
     }
     
+    /// Calculates and returns a Tuple containing the width of an individual item's view and the height for all the views when they
+    /// are laid out in a grid. The total height is used to determine if the total height is too large to accommodate all of the cards at
+    /// the minimum width without scrolling, or whether, instead, we need to insert a ScrollView
+    /// - Parameter size: the CGSize that is the view size for the entire grid
+    /// - Returns: a Tuple containing the width of an individual
     private func cardWidthAndTotalHeight(in size: CGSize) ->
     (width: CGFloat, totalHeight: CGFloat) {
         let width = widthThatFits(in: size)
@@ -72,15 +99,13 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
         let numRows = ceil(CGFloat(items.count) / numColumns)
         let cardHeight = width / aspectRatio
         let totalHeight = (cardHeight + borderAllowance) * numRows
-//        print("CardWidth: \(width); CardHeight: \(cardHeight); NumColumns: \(numColumns); NumRows: \(numRows); " +
-//              "TotalHeight: \(totalHeight); Area height: \(size.height); Area width: \(size.width); " +
-//              "Needs scroll: \(totalHeight > size.height)")
         return (width: width, totalHeight: totalHeight)
     }
-    /// Creates and returns a GridItem whose size is based on the size of the ScrollView in which it lives. Since this is called every
+    
+    /// Creates and returns a GridItem whose size is based on the size of the View in which it lives. Since this is called every
     /// time the View is rebuilt, it gets called when cards are added or removed, so the card width and the radius for the corners
     /// of the cards gets updated whenever this is called.
-    /// - Parameter size: the CGSize of the ScrollView that holds the GridItem
+    /// - Parameter size: the CGSize of the View that holds the GridItem
     /// - Returns: a GridItem sized to the correct size
     private func gridItemOf(width: CGFloat) -> GridItem {
         return GridItem(
@@ -217,8 +242,3 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
 
 }
 
-//struct AspectVGrid_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AspectVGrid()
-//    }
-//}

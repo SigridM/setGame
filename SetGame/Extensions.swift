@@ -177,6 +177,11 @@ extension Double {
 }
 
 extension CGSize {
+    /// Subtract the same amount from both the width and height of the CGSize
+    /// - Parameters:
+    ///   - lhs: the CGSize from which we are subtracting the amount
+    ///   - rhs: a Double which will be subtracted from both the width and height
+    /// - Returns: a new CGSize that is reduced in both width and height by the rhs Double from the original CGSize
     public static func -(lhs: CGSize, rhs: Double) -> CGSize {
         return CGSize(width: lhs.width - rhs, height: lhs.height - rhs)
     }

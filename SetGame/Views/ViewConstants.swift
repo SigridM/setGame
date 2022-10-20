@@ -13,23 +13,40 @@ struct ViewConstants {
     /// How wide the width of the border around each card should be
     static let cardBorderWidth = 3.0
     
+    /// How wide the width of the border around each card should be
+    static let selectedCardBorderWidth = cardBorderWidth * 2
+    
     /// The shape of the cards, width relative to height
     static let cardAspectRatio = 2.0/3.0
     
-    /// The value of the opacity of a card when it has been turned down and is matched; 0 == fully transparent; 1 == fully opaque;
-    /// when cards are matched, make them transparent so they disappear from view
-    static let downAndMatchedOpacity = 0.0
+    /// Each card should be no smaller than this width, even if there are several on the table. If they won't fit at this width, the
+    /// view should scroll
+    static let minCardWidth = 55.0
     
-    /// The value of the opacity of a card when it has been turned up and is unmatched; 0 == fully transparent; 1 == fully opaque;
-    /// when cards are up and unmatched, make them fully opaque.
-    static let upAndUnmatchedOpacity = 0.0
+    /// The opacity that a card should have to indicate it is part of a proper set
+    static let partOfSetOpacity = 0.25
     
-    /// The value of the opacity of a card when it is turned up but was just matched; dim it distinguish between it and an unmatched
-    /// card
-    static let upAndMatchedOpacity = 0.1
+    /// The opacity that a card should have when it is not part of a proper set
+    static let notInSetOpacity = 1.0
     
-    /// A Boolean, true if we are currently printing a lot of diagnostics about the card width calculations to the console
-    static let debuggingCardWidth = false
+    /// The opacity that makes up the bottom, colored layer when a shape is shaded
+    static let shadedBottomLayerOpacity = 0.65
+    
+    /// The opacity that makes up the top, patterned layer when a shape is shaded
+    static let shadedTopLayerOpacity = 0.55
+    
+    /// The image that is used to make the pattern for a shaded shape
+    static let shadingPatternImage = Image(systemName: "circle.grid.3x3")
+    
+    /// The little bit shaved off the height of a shape to keep it well within the border of its rectangle inside a card
+    static let pathAllowance = 2.0
+
+    /// The color of the border of a card that indicates that the user chose the maximum number of cards, but they don't make up a
+    /// proper set, used only for those cards that are part of the non-set
+    static let partOfNonSetBorderColor = Color.black
+    
+    /// The color of the border of a card by default.
+    static let defaultBorderColor = Color.gray
     
     /// The String that is the common part of the alert message
     static let alertMessageBase = "Game is not over. Are you sure you want "
@@ -44,14 +61,12 @@ struct ViewConstants {
     
     /// The following four images are the system images for the given buttons
     static let addImage = Image(systemName: "plus.circle")
-    static let removeImage = Image(systemName: "minus.circle")
-    static let resetImage = Image(systemName: "arrow.uturn.forward.circle")
     static let newGameImage = Image(systemName: "play.square")
     
     /// A Double, the denominator for the fraction of the width of a single card that should serve as the radius
     /// of the circle creating the rounded corner of a card
     static let cornerRadiusFactor = 4.0
     
-    /// A Double that relates the size of the text emoji to the size of a card
-    static let emojiScale = 0.8
+    /// A Double that reduces the size of a shape relative to the size of the rect it is in for a single card
+    static let inset = 12.0
 } // end ViewConstants

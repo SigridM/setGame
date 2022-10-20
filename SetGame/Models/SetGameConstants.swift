@@ -13,4 +13,8 @@ struct SetGameConstants {
     static let setSize = 3
     /// The number of cards that should be dealt when the game begins.
     static let initialDealSize = setSize * 4
+    
+    /// In a traditional game of Set, there can be no cap set if we have more than 20 cards in the tableau
+    static let minimumCapSetSize = 20
+    
 }

@@ -18,11 +18,13 @@ struct SetCard: Equatable, Identifiable {
     let number: NumberFeature
     
     /// Each card starts out unselected and not part of either a correct set or a non-set
-    var isSelected = false
-    var isPartOfSet = false
-    var isPartOfNonSet = false
+    private(set) var isSelected = false
+    private(set) var isPartOfSet = false
+    private(set) var isPartOfNonSet = false
     
-    /// Answers a Boolean: whether the receiver forms a set with two other cards.
+    /// Answers a Boolean: whether the receiver forms a set with two other cards. This is true if all of the card's features
+    /// form a set with the same features of the other two cards. The comparison must be made onlly among different cards;
+    /// a card cannot form a set with itself.
     /// - Parameters:
     ///   - secondCard: a SetCard (that must not be the receiver) that is potentially part of the set
     ///   - thirdCard: a SetCard (that must not be the receiver or the secondCard) that is potentially part of the set
@@ -68,9 +70,9 @@ struct SetCard: Equatable, Identifiable {
         isSelected = true
     }
     
-    /// Calculates and returns an Int that uniquely identifies a single SetCard
+    /// Calculates an Int that uniquely identifies a single SetCard
     var id: Int {
-        return shape.rawValue * 1000
+        shape.rawValue * 1000
         + shading.rawValue * 100
         + color.rawValue * 10
         + number.rawValue
