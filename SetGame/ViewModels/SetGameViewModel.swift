@@ -55,6 +55,7 @@ class SetGameViewModel: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
             self.model.deselectAll()
         }
+        model.decreaseScore()
     }
     
     /// Answers a Boolean, whether or not the game is complete, with no more sets available to make
@@ -72,6 +73,12 @@ class SetGameViewModel: ObservableObject {
     /// Asks the model to begin a new game.
     func newGame() {
         model.startGame()
+    }
+    
+    /// Answers the current score stored in the model.
+    /// - Returns: a Double for the current score
+    func score() -> Double {
+        model.score
     }
 }
 

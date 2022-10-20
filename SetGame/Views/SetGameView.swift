@@ -13,14 +13,9 @@ struct SetGameView: View {
     
     var body: some View {
         VStack {
-            if game.isOver() {
-                Text("Set Game - OVER!")
-            } else if game.hasCapSet() {
-                Text("Set Game (Add cards!)")
-            } else if game.hasFullNonSetSelected() {
-                Text("Set Game: Nope!")
-            } else {
-                Text("Set Game")
+            VStack {
+                title
+                score
             }
 
             MinWidthAspectVGrid(
@@ -44,6 +39,24 @@ struct SetGameView: View {
                 Spacer()
             }
         }
+    }
+    
+    /// Returns a Text view that shows the title of the game, along with some additional information
+    var title: some View {
+        if game.isOver() {
+            return Text("Set Game - OVER!" )
+        } else if game.hasCapSet() {
+            return Text("Set Game (Add cards!)")
+        } else if game.hasFullNonSetSelected() {
+            return Text("Set Game: Nope!")
+        } else {
+            return Text("Set Game")
+        }
+    }
+    
+    /// Returns a Text view that shows the current score of the game
+    var score: some View {
+        Text("SCORE: \(Int(game.score()))")
     }
     
     /// An interface element that can add more cards to the tableau, if there are any left in the deck.

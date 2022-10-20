@@ -22,6 +22,9 @@ struct SetGame {
     /// An Array of SetCards that are on the table.
     var tableau: [SetCard]
     
+    /// The game keeps track of the running score
+    private(set) var score = 0.0
+    
     // MARK: Computed inst vars
     /// A Boolean that is true if we have a selection containing a full set.
     var hasSetSelected: Bool {
@@ -141,6 +144,7 @@ struct SetGame {
         deck = SetDeck.newDeck()
         tableau = deck.initialDeal()
         selectionState = .lessThanMaxSelected
+        score = 0.0
     }
 
     /// Answers a Boolean: whether a game is already in progress
@@ -157,6 +161,9 @@ struct SetGame {
             replaceSelectedSet()
             selectionState = .lessThanMaxSelected
         } else {
+            if !hasCapSet() && !deck.isEmpty() {
+                decreaseScore()
+            }
             tableau += deck.subsequentDeal()
         }
     }
@@ -173,6 +180,14 @@ struct SetGame {
         for index in selectedCardIndices {
             tableau[index].toggleSelection()
         }
+    }
+    
+    mutating func increaseScore() {
+        score += SetGameConstants.reward
+    }
+    
+    mutating func decreaseScore() {
+        score += SetGameConstants.punishment
     }
     
     /// Enumerates which of three possible states of selection a SetGame can be in:  with less than the maximum number
@@ -211,9 +226,11 @@ struct SetGame {
                     }
                     if game.hasSetSelected {
                         game.forSelectionsDo{card in card.makePartOfSet()}
+                        game.increaseScore()
                         return .maxSelectedAsSet
                     } else {
                         game.forSelectionsDo{card in card.makePartOfNonSet()}
+                        game.decreaseScore()
                         return .maxSelectedAsNonSet
                     }
                     

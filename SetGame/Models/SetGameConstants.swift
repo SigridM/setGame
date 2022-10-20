@@ -17,4 +17,10 @@ struct SetGameConstants {
     /// In a traditional game of Set, there can be no cap set if we have more than 20 cards in the tableau
     static let minimumCapSetSize = 20
     
+    /// The change in score when a set is formed
+    static let reward = 2.0
+    
+    /// The change in score when a non-set is formed, or a hint is offered, or more cards are added when there is not a cap set
+    static let punishment = -1.0
+    
 }
