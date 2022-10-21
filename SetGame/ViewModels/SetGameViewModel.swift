@@ -83,5 +83,11 @@ class SetGameViewModel: ObservableObject {
     func score() -> Double {
         model.score
     }
+    
+    /// Answers a Boolean, whether a game is in progress
+    /// - Returns: a Bool, true if the game has begun
+    func hasBegun() -> Bool {
+        model.gameHasBegun()
+    }
 }
 

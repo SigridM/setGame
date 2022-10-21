@@ -59,10 +59,14 @@ struct ViewConstants {
     /// The String message to show if we need to pop up an alert dialog when decreasing the cards
     static let addCardsAlertMessage = alertMessageBase + "a new game with more cards?"
     
-    /// The following four images are the system images for the given buttons
-    static let addImage = Image(systemName: "plus.circle")
-    static let newGameImage = Image(systemName: "play.square")
-    
+    /// The following three images are the system images for the given buttons
+    static let addImageName = "plus.circle"
+    static let addImage = Image(systemName: addImageName)
+    static let newGameImageName = "play.square"
+    static let newGameImage = Image(systemName: newGameImageName)
+    static let hintImageName = "questionmark.circle"
+    static let hintImage = Image(systemName: hintImageName)
+
     /// A Double, the denominator for the fraction of the width of a single card that should serve as the radius
     /// of the circle creating the rounded corner of a card
     static let cornerRadiusFactor = 4.0

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0520AD7D2901E6D4006A9B70 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD7C2901E6D4006A9B70 /* CardView.swift */; };
+		0520AD7F2902DEA9006A9B70 /* GameChangingFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */; };
 		05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437228EDCE2200378BB0 /* DiamondShape.swift */; };
 		05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437428EDD95000378BB0 /* OvalShape.swift */; };
 		05D7437A28EF240400378BB0 /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437928EF240400378BB0 /* SetGame.swift */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		0520AD7C2901E6D4006A9B70 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameChangingFeature.swift; sourceTree = "<group>"; };
 		05D7437228EDCE2200378BB0 /* DiamondShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiamondShape.swift; sourceTree = "<group>"; };
 		05D7437428EDD95000378BB0 /* OvalShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvalShape.swift; sourceTree = "<group>"; };
 		05D7437928EF240400378BB0 /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				05D7437228EDCE2200378BB0 /* DiamondShape.swift */,
+				0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */,
 				05D7437428EDD95000378BB0 /* OvalShape.swift */,
 				05F78B7028E2263F002B2975 /* SquiggleShape.swift */,
 				05F78B4428E1F540002B2975 /* SetGameView.swift */,
@@ -329,6 +332,7 @@
 				05F78B7128E2263F002B2975 /* SquiggleShape.swift in Sources */,
 				05D7438428EF665E00378BB0 /* ViewConstants.swift in Sources */,
 				05D7438028EF274D00378BB0 /* SetGameConstants.swift in Sources */,
+				0520AD7F2902DEA9006A9B70 /* GameChangingFeature.swift in Sources */,
 				05D7437C28EF243100378BB0 /* SetDeck.swift in Sources */,
 				05D7438228EF652700378BB0 /* MinWidthAspectVGrid.swift in Sources */,
 				05F78B6D28E1F5A2002B2975 /* SetFeature.swift in Sources */,

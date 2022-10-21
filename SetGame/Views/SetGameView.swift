@@ -11,6 +11,10 @@ import SwiftUI
 struct SetGameView: View {
     @ObservedObject var game = SetGameViewModel()
     
+    /// A Boolean State, true if, when the user clicks on a  the new game button, we need to show an alert
+    @State private var needsNewGameAlert: Bool = false
+    
+    /// Creates and returns the main view for the SetGame
     var body: some View {
         VStack {
             VStack {
@@ -42,7 +46,7 @@ struct SetGameView: View {
     }
     
     /// Returns a Text view that shows the title of the game, along with some additional information
-    var title: some View {
+    private var title: some View {
         if game.isOver() {
             return Text("Set Game - OVER!" )
         } else if game.hasCapSet() {
@@ -55,7 +59,7 @@ struct SetGameView: View {
     }
     
     /// Returns a Text view that shows the current score of the game
-    var score: some View {
+    private var score: some View {
         Text("SCORE: \(Int(game.score()))")
     }
     
@@ -64,7 +68,7 @@ struct SetGameView: View {
         Button {
             game.addCards()
         } label: {
-            Text("Add Cards")
+            Label("Add Cards", systemImage: ViewConstants.addImageName)
         }
         .disabled(game.deckEmpty())
     }
@@ -74,18 +78,25 @@ struct SetGameView: View {
         Button {
             game.showHint()
         } label: {
-            Text("Show Hint")
+            Label("Show Hint", systemImage: ViewConstants.hintImageName)
         }
         .disabled(game.isOver())
+
+  
     }
     
-    /// An interface element that will start a new game
-    var newGameInitiator: some View {
-        Button {
-            game.newGame()
-        } label: {
-            Text("New Game")
-        }
+    /// A UI element that, when selected, initiates a new game with a random theme;
+    /// Pops up an alert to confirm that we want a new game if the current game is underway and not complete
+    private var newGameInitiator: some View {
+        let features = GameChangingFeature(
+            imageName: ViewConstants.newGameImageName,
+            buttonText: "New Game",
+            needsAlert: _needsNewGameAlert,
+            continueAction: game.newGame,
+            alertMessage: ViewConstants.newGameAlertMessage,
+            game: game
+        )
+        return features.gameChanger()
     }
 }
 
