@@ -9,27 +9,20 @@ import SwiftUI
 
 /// A Shape that creates a path for a diamond. By default, it draws a single diamond, but can be configured to draw
 /// any number of diamonds, stacked vertically, by initializing the shape with a number of repetitions
-struct DiamondShape: Shape {
+struct DiamondShape: RepeatableShape {
     /// The total number of diamonds to be drawn, stacked vertically, defaulting to one.
-    let repetitions: Int
-    
+    var repetitions: Int
+    var pointConstants: RepeatableShapeConstants.Type
+
     /// Initialize the DiamondShape to have the default single diamond
     init() {
-        self.repetitions = 1
+        repetitions = 1
+        pointConstants = DiamondConstants.self
     }
     
-    /// Initialize the DiamondShape to have any number of repetitions of the diamond, stacked vertically
-    /// - Parameter repetions: the number of repetitions of the diamond
-    init(_ repetitions: Int) {
-        guard repetitions > 0 else {
-            self.repetitions = 1
-            return
-        }
-        self.repetitions = repetitions
-    }
     
     /// A struct to encapsulate the constants for the Diamond drawing
-    struct DiamondConstants {
+    struct DiamondConstants: RepeatableShapeConstants {
         
         /// points 0 and 2 are both in the center of the rect, half of the width
         private static let point0XFactor = 1.0 / 2.0
@@ -50,7 +43,7 @@ struct DiamondShape: Shape {
         private static let point2YFactor = (defaultHeight - secondPointYInset) / defaultHeight
         
         /// An Array of the four points delineating the four segments of the diamond
-        static let pointFactors = [
+        static var pointFactors = [
             CGPoint(x: point0XFactor, y: point0YFactor),
             CGPoint(x: point1XFactor, y: point1YFactor),
             CGPoint(x: point2XFactor, y: point2YFactor),
@@ -61,59 +54,7 @@ struct DiamondShape: Shape {
         static let defaultPointRadius = 4.0
     }
     
-    
-    /// Creates and returns an array of the four CGPoints delimiting the four lines of the diamond, scaled to
-    /// the given CGSize
-    /// - Parameter size: a CGSize into which the diamond should fit.
-    /// - Returns: an Array of four CGPoints
-    private func pointsScaled(to size: CGSize) -> [CGPoint] {
-        let scaling = CGAffineTransform(scaleX: size.width, y: size.height)
-        return DiamondConstants.pointFactors.map{$0.applying(scaling)}
-    }
-    
-    /// Adds a single diamond to the given path
-    /// - Parameters:
-    ///   - path: the Path that will be modified to include the new diamond
-    ///   - points: the end points delimiting the four lines of the diamond
-    private func addDiamondTo(_ path: inout Path, using points: [CGPoint]) {
-        path.move(to: points[0])
-        
-        for pointIndex in points.indices {
-            path.addLine(to: points[(pointIndex + 1) % points.count])
-        }
-    }
 
-    /// Creates and returns a Path that draws a number of diamonds, stacked vertically, the number of which is specified by
-    /// the receiver's repetitions instance variable.
-    /// - Parameter rect: a CGRect circumscribing all the diamonds
-    /// - Returns: a Path that draws the diamonds
-    private func diamonds(in rect: CGRect) -> Path {
-        var points = pointsScaled(to: rect.size)
-        
-        // to fit all the repetitions into the space, we must divide the space up, vertically,
-        // by the number of repetitions
-        let divisor = Double(repetitions)
-        
-        let scale = CGSize(width: 1.0, height: 1.0/divisor)
-        points = points.map{$0.scaled(to: scale)}
-        
-        // once you have the scaled points, move them to the top of the CGRect
-        points = points.map{$0.moved(by: rect.origin)}
-        
-        let shift = CGPoint(x: 0.0, y: rect.height/divisor) // how far down to shift each rep
-        
-        var path = Path()
-        
-        var iteration = 1
-        
-        repeat {
-            addDiamondTo(&path, using: points)
-            points = points.map{$0.moved(by: shift)}
-            iteration += 1
-        } while iteration <= repetitions
-        
-        return path
-    }
     
     /// For debugging purposes, create and return a path that draws a circle for each line of each diamond in the receiver:
     /// the point is the point at the beginning of a line. This is repeated for each diamond in the receiver, scaled and shifted
@@ -183,12 +124,6 @@ struct DiamondShape: Shape {
         }
     }
     
-    /// To conform to the Shape protocol, creates and returns the Path that draws the shape.
-    /// - Parameter rect: a CGRect that circumscribes the diamond
-    /// - Returns: a Path that draws the diamond
-    func path(in rect: CGRect) -> Path {
-        return diamonds(in: rect)
-    }
 }
 
 /// Tests the DiamondShape by drawing each of three sets of diamonds: a DiamondShape with one diamond; a DiamondShape with
