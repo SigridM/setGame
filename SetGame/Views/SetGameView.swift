@@ -62,7 +62,7 @@ struct SetGameView: View {
     
     /// An interface element that can add more cards to the tableau, if there are any left in the deck.  It can also flash
     /// if we are in the middle of a hint to add more cards.
-    var cardAdder: some View {
+    private var cardAdder: some View {
         Button {
             game.addCards()
         } label: {
@@ -72,7 +72,7 @@ struct SetGameView: View {
     }
     
     /// An interface element that will show a hint for a set on the tableau if the user can't find one and needs help
-    var hinter: some View {
+    private var hinter: some View {
         Button {
             game.showHint()
         } label: {
