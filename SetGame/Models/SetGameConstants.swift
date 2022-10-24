@@ -21,6 +21,6 @@ struct SetGameConstants {
     static let reward = 2.0
     
     /// The change in score when a non-set is formed, or a hint is offered, or more cards are added when there is not a cap set
-    static let punishment = -1.0
+    static let penalty = -1.0
     
 }

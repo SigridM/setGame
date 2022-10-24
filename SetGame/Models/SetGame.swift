@@ -22,6 +22,10 @@ struct SetGame {
     /// An Array of SetCards that are on the table.
     var tableau: [SetCard]
     
+    /// The state that says we are in the middle of providing a hint to the user to prompt them to add cards. This must be
+    /// in the model because the model is published, so when it changes, the UI will change.
+    var inAddCardsHint = false
+    
     /// The game keeps track of the running score
     private(set) var score = 0.0
     
@@ -182,12 +186,14 @@ struct SetGame {
         }
     }
     
+    /// The user has had some success; increase the score by a fixed amount
     mutating func increaseScore() {
         score += SetGameConstants.reward
     }
     
+    /// The user has had a failure of some kind (could be a mismatch; could be a hint); decrease the score by a fixed amount
     mutating func decreaseScore() {
-        score += SetGameConstants.punishment
+        score += SetGameConstants.penalty
     }
     
     /// Enumerates which of three possible states of selection a SetGame can be in:  with less than the maximum number

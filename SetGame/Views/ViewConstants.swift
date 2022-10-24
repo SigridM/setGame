@@ -76,4 +76,10 @@ struct ViewConstants {
     
     /// The three different colors that cards can be
     static let cardColors = [Color.red, Color.green, Color.blue]
+    
+    /// For flashing a hint to the user for a set that is on the table, the number of seconds to show the set selection
+    static let delayTime = 1.0
+    
+    /// For flashing a hint to the user for a cap set, the number of seconds to blink the card adder
+    static let quickDelayTime = 0.5
 } // end ViewConstants

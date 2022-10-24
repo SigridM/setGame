@@ -12,15 +12,13 @@ struct SetGameView: View {
     @ObservedObject var game = SetGameViewModel()
     
     /// A Boolean State, true if, when the user clicks on a  the new game button, we need to show an alert
-    @State private var needsNewGameAlert: Bool = false
+    @State private var needsNewGameAlert = false
     
     /// Creates and returns the main view for the SetGame
     var body: some View {
         VStack {
-            VStack {
-                title
-                score
-            }
+            title
+            score
 
             MinWidthAspectVGrid(
                 items: game.cards(),
@@ -45,12 +43,11 @@ struct SetGameView: View {
         }
     }
     
-    /// Returns a Text view that shows the title of the game, along with some additional information
+    /// Returns a Text view that shows the title of the game, along with some additional feedback (like whether the game is
+    /// over, or if there is a nonset selected.
     private var title: some View {
         if game.isOver() {
             return Text("Set Game - OVER!" )
-        } else if game.hasCapSet() {
-            return Text("Set Game (Add cards!)")
         } else if game.hasFullNonSetSelected() {
             return Text("Set Game: Nope!")
         } else {
@@ -63,14 +60,15 @@ struct SetGameView: View {
         Text("SCORE: \(Int(game.score()))")
     }
     
-    /// An interface element that can add more cards to the tableau, if there are any left in the deck.
+    /// An interface element that can add more cards to the tableau, if there are any left in the deck.  It can also flash
+    /// if we are in the middle of a hint to add more cards.
     var cardAdder: some View {
         Button {
             game.addCards()
         } label: {
             Label("Add Cards", systemImage: ViewConstants.addImageName)
         }
-        .disabled(game.deckEmpty())
+        .disabled(game.deckEmpty() || game.inAddCardHint())
     }
     
     /// An interface element that will show a hint for a set on the tableau if the user can't find one and needs help

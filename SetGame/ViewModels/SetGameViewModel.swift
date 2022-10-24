@@ -47,19 +47,43 @@ class SetGameViewModel: ObservableObject {
         model.hasCapSet()
     }
     
-    /// Indicate to the user the location of a set on the table. This is done by momentarily flashing the selection of that set.
+    /// Indicate to the user the location of a set on the table, if there is one. This is done by momentarily selecting, then pausing,
+    /// then desselecting, that set.
+    /// If there is a cap set (no set on the tableau), instead turn the state on and off a couple of times in succession
+    /// that shows that we are in the midst of a hint to add cards. This will enable the View to draw the user's attention
+    /// to that interface element.
+    /// In either case, decrement the score.
+    /// Do not show a hint if the game is over or if there is a proper set already selected.
     func showHint() {
-        if !model.hasCapSet() {
-            model.decreaseScore()
-        }
-        model.deselectAll()
-        model.selectFirstSetOnTableau()
-        let secondsToDelay = 1.0
-        DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
-            self.model.deselectAll()
+        guard !isOver() && !model.hasSetSelected else { return}
+        
+        model.decreaseScore()
+
+        if model.hasCapSet() {
+            var deadline = DispatchTime.now() + ViewConstants.quickDelayTime
+            model.inAddCardsHint = true
+            DispatchQueue.main.asyncAfter(deadline: deadline) {
+                self.model.inAddCardsHint = false
+            }
+            deadline = deadline + ViewConstants.quickDelayTime
+            DispatchQueue.main.asyncAfter(deadline: deadline) {
+                self.model.inAddCardsHint = true
+            }
+            deadline = deadline + ViewConstants.quickDelayTime
+            DispatchQueue.main.asyncAfter(deadline: deadline) {
+                self.model.inAddCardsHint = false
+            }
+        } else {
+            model.deselectAll()
+            model.selectFirstSetOnTableau()
+            let secondsToDelay = ViewConstants.delayTime
+            DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
+                self.model.deselectAll()
+            }
         }
 
     }
+    
     
     /// Answers a Boolean, whether or not the game is complete, with no more sets available to make
     /// - Returns: a Bool, true if the game is complete
@@ -88,6 +112,12 @@ class SetGameViewModel: ObservableObject {
     /// - Returns: a Bool, true if the game has begun
     func hasBegun() -> Bool {
         model.gameHasBegun()
+    }
+    
+    /// Answers a Boolean, whether we are in the midst of giving a hint to add cards
+    /// - Returns: a Bool, true if we are in the middle of the hint
+    func inAddCardHint() -> Bool {
+        model.inAddCardsHint
     }
 }
 
