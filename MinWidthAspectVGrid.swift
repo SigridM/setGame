@@ -32,7 +32,7 @@ struct MinWidthAspectVGrid<Item, ItemView>: View where ItemView: View, Item: Ide
     init(items: [Item],
          aspectRatio: CGFloat,
          minWidth: CGFloat,
-         content: @escaping (Item, CGFloat) -> ItemView) {
+         @ViewBuilder content: @escaping (Item, CGFloat) -> ItemView) {
         self.items = items
         self.aspectRatio = aspectRatio
         self.minWidth = minWidth
