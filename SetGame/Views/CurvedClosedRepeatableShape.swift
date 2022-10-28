@@ -11,9 +11,9 @@ import SwiftUI
 /// circling around the points from the last to the first to close the shape. The entire set of shapes is scaled to its enclosing rectangle.
 protocol CurvedClosedRepeatableShape: ClosedRepeatableShape {
     
-    /// For identifying each segment by both name (for readability) and number (for iterating around the shape's segments), require
-    /// a type that is, essentially, a CaseIterable enum of the names with the numbers as raw values for a key into the controlFactors
-    /// Dictionary
+    /// For identifying each segment by both name (for readability) and number (for iterating around the shape's segments and mapping
+    /// the segment's controls to its end points from ClosedRepeatableShape), require a type that is, essentially, a CaseIterable enum
+    /// of the names with the numbers as raw values for a key into the controlFactors Dictionary
     associatedtype SegmentKey: RawRepresentable, Hashable, CaseIterable
     
     /// A Dictionary of SegmentControllers, each stored by a case of an enum. ach SegmentController contains the first and second
@@ -45,7 +45,7 @@ extension CurvedClosedRepeatableShape {
         path.move(to: points[0])
         
         for segment in SegmentKey.allCases {
-            let segmentNum = segment.rawValue as! Int
+            let segmentNum = segment.rawValue as! Int //maps the curve control points to the end points
             path.addCurve(to: points[segmentNum],
                           control1: controls[segment]!.control1,
                           control2: controls[segment]!.control2)
