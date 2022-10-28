@@ -7,23 +7,17 @@
 
 import SwiftUI
 
-/// A Shape that creates a path for a worm-like curve. By default, it draws a single oval, but can be configured to draw
+/// A Shape that creates a path for an oval. By default, it draws a single oval, but can be configured to draw
 /// any number of ovals, stacked vertically, by initializing the shape with a number of repetitions
-struct OvalShape: CurvedRepeatableShape {
-    var pointConstants: RepeatableShapeConstants.Type
+struct OvalShape: CurvedClosedRepeatableShape {
     
-    var curveConstants: CurvedRepeatableShapeConstants.Type
-    
-    var repetitions: Int
-    
-    /// Initialize the OvalShape to have the default single oval
-    init() {
-        repetitions = 1
-        pointConstants = OvalConstants.self
-        curveConstants = OvalConstants.self
-    }
+    var repetitions = 1
+    let pointFactors = OvalConstants.pointFactors
+    let controlFactors = OvalConstants.controlFactors
+    typealias SegmentKey = FourPartSegmentName
+
     /// A struct to encapsulate the constants for the Oval drawing
-    struct OvalConstants: CurvedRepeatableShapeConstants, RepeatableShapeConstants {
+    struct OvalConstants {
         
         /// Because the original oval was drawn in a 60x20 rectangle, all inset calculations are
         /// based proportionally on that original grid, as if it was a 1x1 square. The insets are
@@ -88,132 +82,37 @@ struct OvalShape: CurvedRepeatableShape {
         private static let leftCapControl2YFactor = endCapYInset / defaultHeight
         
         /// A Dictionary of two-point SegmentControllers, stored by their OvalName for readability
-        static var controlFactors = [
-            SegmentName.upper: (SegmentController.from(x1: upperControl1XFactor,
-                                            y1: upperControl1YFactor,
-                                            x2: upperControl2XFactor,
-                                            y2: upperControl2YFactor)),
-            SegmentName.right: (SegmentController.from(x1: rightCapControl1XFactor,
-                                            y1: rightCapControl1YFactor,
-                                            x2: rightCapControl2XFactor,
-                                            y2: rightCapControl2YFactor)),
-            SegmentName.lower: (SegmentController.from(x1: lowerControl1XFactor,
-                                            y1: lowerControl1YFactor,
-                                            x2: lowerControl2XFactor,
-                                            y2: lowerControl2YFactor)),
-            SegmentName.left: (SegmentController.from(x1: leftCapControl1XFactor,
-                                           y1: leftCapControl1YFactor,
-                                           x2: leftCapControl2XFactor,
-                                           y2: leftCapControl2YFactor))
+        static var controlFactors: [FourPartSegmentName: SegmentController] = [
+            .upper: (SegmentController.from(
+                x1: upperControl1XFactor,
+                y1: upperControl1YFactor,
+                x2: upperControl2XFactor,
+                y2: upperControl2YFactor)),
+            .right: (SegmentController.from(
+                x1: rightCapControl1XFactor,
+                y1: rightCapControl1YFactor,
+                x2: rightCapControl2XFactor,
+                y2: rightCapControl2YFactor)),
+            .lower: (SegmentController.from(
+                x1: lowerControl1XFactor,
+                y1: lowerControl1YFactor,
+                x2: lowerControl2XFactor,
+                y2: lowerControl2YFactor)),
+            .left: (SegmentController.from(
+                x1: leftCapControl1XFactor,
+                y1: leftCapControl1YFactor,
+                x2: leftCapControl2XFactor,
+                y2: leftCapControl2YFactor))
         ]
-
-        
-        /// For debugging, the radius of the circle that shows where a point is that defines the end of a segment
-        static let defaultPointRadius = 4.0
-    }
-
-    
-    /// For debugging purposes, create and return a path that draws three circles for each segment of each oval in the receiver:
-    /// the three points are the point at the beginning of a segment, and the two control points controlling the curve of that segment
-    /// that begins at the point and goes to the next point. This is repeated for each oval in the receiver, scaled and shifted
-    /// appropriately.
-    /// - Parameters:
-    ///   - rect: a CGRect circumscribing the entire OvalShape
-    ///   - originIndex: the index of the point starting the segment
-    /// - Returns: a Path that draws all the circles
-    private func dotsPath(in rect: CGRect, from originIndex: Int) -> Path {
-        
-        let destinationIndex = (originIndex + 1) % OvalConstants.pointFactors.count
-        let segment = SegmentName(rawValue: destinationIndex)!
-        var point = pointsScaled(to: rect.size)[originIndex]
-        var controlPoints = controlPointsScaled(to: rect.size)
-        let divisor = Double(repetitions)
-        
-        let scale = CGSize(width: 1.0, height: 1.0/divisor)
-        point = point.scaled(to: scale)
-        controlPoints = controlPoints.mapValues{$0.scaled(to: scale)}
-        
-        // once you have the scaled points, move them to the top of the CGRect
-        point = point.moved(by: rect.origin)
-        controlPoints = controlPoints.mapValues{$0.moved(by: rect.origin)}
-        
-        let shift = CGPoint(x: 0.0, y: rect.height/divisor)
-
-        var path = Path()
-        var iteration = 1
-
-        repeat {
-            addCircles(to: &path, using: point, and: controlPoints[segment]!)
-            point = point.moved(by: shift)
-            controlPoints = controlPoints.mapValues{$0.moved(by: shift)}
-            iteration += 1
-        } while iteration <= repetitions
-        
-
-        
-        return path
-    }
-    
-    /// For debugging purposes, add the three circles to the given path that show the point at the beginning of a segment as well
-    /// as the two control points for that segment
-    /// - Parameters:
-    ///   - path: the Path that will be modified by adding circles to it
-    ///   - point: the CGPoint at the beginning of the segment
-    ///   - controller: the SegmentController that contains the control points for the segment
-    private func addCircles(to path: inout Path, using point: CGPoint, and controller: SegmentController) {
-        let radius = OvalConstants.defaultPointRadius
-        
-        // Move to and draw a larger circle at the beginning point
-        path.move(to: point)
-        path.addArc(center: point,
-                    radius: radius,
-                    startAngle: Angle(degrees: 0),
-                    endAngle: Angle(degrees: 360),
-                    clockwise: true)
-        
-        // Move to and draw a smaller circle at the first control point
-        path.move(to: controller.control1)
-        path.addArc(center: controller.control1,
-                    radius: radius/2,
-                    startAngle: Angle(degrees: 0),
-                    endAngle: Angle(degrees: 360),
-                    clockwise: true)
-        
-        // Move to and draw another small circle at the second control point
-        path.move(to: controller.control2)
-        path.addArc(center: controller.control2,
-                    radius: radius / 2,
-                    startAngle: Angle(degrees: 0),
-                    endAngle: Angle(degrees: 360),
-                    clockwise: true)
-    }
-    
-    /// For debugging purposes, creates and returns a ZStack of Views, each of which contains a path for a OvalShape of one of
-    /// the given colors, where the path can show the points and control points that make up the oval's curves
-    /// - Parameters:
-    ///   - rect: the CGRect that circumscribes the entire OvalShape
-    ///   - colors: an Array of Colors, one for each of the four segments of the Oval
-    /// - Returns: a composite View of all of the OvalShapes, with their dot paths, stacked on top of each other.
-    @ViewBuilder
-    func debugViews(in rect: CGRect, with colors: [Color]) -> some View {
-        ZStack {
-            ForEach(0..<4) { index in
-                OvalShape(repetitions)
-                    .dotsPath(in: rect, from: index)
-                    .foregroundColor(colors[index])
-                    .opacity(0.75)
-            }
-        }
-    }
-
-}
+    } // end OvalConstants
+} // end OvalShape
 
 /// Tests the OvalShape by drawing each of three sets of ovals: a OvalShape with one oval; a OvalShape with
 /// two ovals, and a OvalShape with three ovals. Because all ovals should be the same size, regardless of the number,
 /// the first is drawn in a rectangle one third the height of the last, and the second in a rectangle 2/3 the height of the last, with each one
 /// centererd vertically.  Additional rects and dots are drawn for debugging purposes, if debuggingn is true
 struct OvalView: View {
-    let debugging = false
+    let debugging = true
     let color: Color = .green
     var body: some View {
         VStack {
@@ -314,8 +213,8 @@ struct OvalView: View {
             }
         }
         .padding()
-    }
-}
+    } // end body
+} // end OvalView
 
 struct OvalShape_Previews: PreviewProvider {
     static var previews: some View {

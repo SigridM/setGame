@@ -9,8 +9,10 @@
 /* Begin PBXBuildFile section */
 		0520AD7D2901E6D4006A9B70 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD7C2901E6D4006A9B70 /* CardView.swift */; };
 		0520AD7F2902DEA9006A9B70 /* GameChangingFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */; };
-		0520AD812907118B006A9B70 /* RepeatableShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD802907118B006A9B70 /* RepeatableShape.swift */; };
-		0520AD83290715AA006A9B70 /* RepeatableShapeConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD82290715AA006A9B70 /* RepeatableShapeConstants.swift */; };
+		0520AD812907118B006A9B70 /* ClosedRepeatableShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD802907118B006A9B70 /* ClosedRepeatableShape.swift */; };
+		0520AD83290715AA006A9B70 /* FourPartSegmentName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */; };
+		0520AD85290B2238006A9B70 /* CurvedClosedRepeatableShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */; };
+		0520AD87290BF5F6006A9B70 /* SegmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD86290BF5F6006A9B70 /* SegmentController.swift */; };
 		05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437228EDCE2200378BB0 /* DiamondShape.swift */; };
 		05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437428EDD95000378BB0 /* OvalShape.swift */; };
 		05D7437A28EF240400378BB0 /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437928EF240400378BB0 /* SetGame.swift */; };
@@ -52,8 +54,10 @@
 /* Begin PBXFileReference section */
 		0520AD7C2901E6D4006A9B70 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameChangingFeature.swift; sourceTree = "<group>"; };
-		0520AD802907118B006A9B70 /* RepeatableShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatableShape.swift; sourceTree = "<group>"; };
-		0520AD82290715AA006A9B70 /* RepeatableShapeConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatableShapeConstants.swift; sourceTree = "<group>"; };
+		0520AD802907118B006A9B70 /* ClosedRepeatableShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosedRepeatableShape.swift; sourceTree = "<group>"; };
+		0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourPartSegmentName.swift; sourceTree = "<group>"; };
+		0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurvedClosedRepeatableShape.swift; sourceTree = "<group>"; };
+		0520AD86290BF5F6006A9B70 /* SegmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentController.swift; sourceTree = "<group>"; };
 		05D7437228EDCE2200378BB0 /* DiamondShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiamondShape.swift; sourceTree = "<group>"; };
 		05D7437428EDD95000378BB0 /* OvalShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvalShape.swift; sourceTree = "<group>"; };
 		05D7437928EF240400378BB0 /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
@@ -107,8 +111,10 @@
 			isa = PBXGroup;
 			children = (
 				05D7437228EDCE2200378BB0 /* DiamondShape.swift */,
-				0520AD802907118B006A9B70 /* RepeatableShape.swift */,
-				0520AD82290715AA006A9B70 /* RepeatableShapeConstants.swift */,
+				0520AD802907118B006A9B70 /* ClosedRepeatableShape.swift */,
+				0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */,
+				0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */,
+				0520AD86290BF5F6006A9B70 /* SegmentController.swift */,
 				0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */,
 				05D7437428EDD95000378BB0 /* OvalShape.swift */,
 				05F78B7028E2263F002B2975 /* SquiggleShape.swift */,
@@ -331,12 +337,13 @@
 			files = (
 				05D7437E28EF247600378BB0 /* SetCard.swift in Sources */,
 				05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */,
-				0520AD83290715AA006A9B70 /* RepeatableShapeConstants.swift in Sources */,
+				0520AD83290715AA006A9B70 /* FourPartSegmentName.swift in Sources */,
 				05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */,
 				05F78B4528E1F540002B2975 /* SetGameView.swift in Sources */,
+				0520AD87290BF5F6006A9B70 /* SegmentController.swift in Sources */,
 				0520AD7D2901E6D4006A9B70 /* CardView.swift in Sources */,
 				05F78B4328E1F540002B2975 /* SetGameApp.swift in Sources */,
-				0520AD812907118B006A9B70 /* RepeatableShape.swift in Sources */,
+				0520AD812907118B006A9B70 /* ClosedRepeatableShape.swift in Sources */,
 				05F78B7128E2263F002B2975 /* SquiggleShape.swift in Sources */,
 				05D7438428EF665E00378BB0 /* ViewConstants.swift in Sources */,
 				05D7438028EF274D00378BB0 /* SetGameConstants.swift in Sources */,
@@ -347,6 +354,7 @@
 				05D7437A28EF240400378BB0 /* SetGame.swift in Sources */,
 				05F78B6F28E20EC3002B2975 /* Extensions.swift in Sources */,
 				05D7438628F1B13D00378BB0 /* SetGameViewModel.swift in Sources */,
+				0520AD85290B2238006A9B70 /* CurvedClosedRepeatableShape.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

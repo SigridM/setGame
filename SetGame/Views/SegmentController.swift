@@ -1,29 +1,11 @@
 //
-//  RepeatableShapeConstants.swift
+//  SegmentController.swift
 //  SetGame
 //
-//  Created by Sigrid Mortensen on 10/24/22.
+//  Created by Sigrid Mortensen on 10/28/22.
 //
 
 import Foundation
-
-protocol RepeatableShapeConstants {
-    static var pointFactors: [CGPoint] {get}
-}
-
-protocol CurvedRepeatableShapeConstants {
-    static var controlFactors: [SegmentName: SegmentController] {get}
-}
-
-/// An enumeration naming the four possible segments of a Squiggle: upper, right, lower, and left;
-/// each has the raw value of the index of the point in the points array where the segment ends,
-/// which helps with iterating through drawing.
-enum SegmentName: Int, CaseIterable {
-    case upper = 1
-    case right = 2
-    case lower = 3
-    case left = 0
-}
 
 /// A structure encapsulating the two control points for a segment of the squiggle. Can be stored, scaled, and moved as a
 /// unit.
@@ -81,4 +63,4 @@ struct SegmentController {
         return points.control2
     }
     
-    }
+}

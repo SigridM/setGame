@@ -1,5 +1,5 @@
 //
-//  SquiggleShape.swift
+//  DiamondShape.swift
 //  SetGame
 //
 //  Created by Sigrid Mortensen on 9/26/22.
@@ -9,20 +9,17 @@ import SwiftUI
 
 /// A Shape that creates a path for a diamond. By default, it draws a single diamond, but can be configured to draw
 /// any number of diamonds, stacked vertically, by initializing the shape with a number of repetitions
-struct DiamondShape: RepeatableShape {
+struct DiamondShape: ClosedRepeatableShape {
+    
     /// The total number of diamonds to be drawn, stacked vertically, defaulting to one.
-    var repetitions: Int
-    var pointConstants: RepeatableShapeConstants.Type
+    var repetitions = 1
+    
+    /// The points that make up the endpoints of a diamond, represented as fractions of a unit so they can be scaled to the
+    /// enclosing rectangle
+    let pointFactors = DiamondConstants.pointFactors
 
-    /// Initialize the DiamondShape to have the default single diamond
-    init() {
-        repetitions = 1
-        pointConstants = DiamondConstants.self
-    }
-    
-    
     /// A struct to encapsulate the constants for the Diamond drawing
-    struct DiamondConstants: RepeatableShapeConstants {
+    struct DiamondConstants {
         
         /// points 0 and 2 are both in the center of the rect, half of the width
         private static let point0XFactor = 1.0 / 2.0
@@ -50,78 +47,6 @@ struct DiamondShape: RepeatableShape {
             CGPoint(x: point3XFactor, y: point3YFactor)
         ]
                    
-        /// For debugging, the radius of the circle that shows where a point is that defines the end of a segment
-        static let defaultPointRadius = 4.0
-    }
-    
-
-    
-    /// For debugging purposes, create and return a path that draws a circle for each line of each diamond in the receiver:
-    /// the point is the point at the beginning of a line. This is repeated for each diamond in the receiver, scaled and shifted
-    /// appropriately.
-    /// - Parameters:
-    ///   - rect: a CGRect circumscribing the entire DiamondShape
-    ///   - originIndex: the index of the point starting the segment
-    /// - Returns: a Path that draws all the circles
-    private func dotsPath(in rect: CGRect, from originIndex: Int) -> Path {
-        
-        var point = pointsScaled(to: rect.size)[originIndex]
-        let divisor = Double(repetitions)
-        
-        let scale = CGSize(width: 1.0, height: 1.0/divisor)
-        point = point.scaled(to: scale)
-        
-        // once you have the scaled points, move them to the top of the CGRect
-        point = point.moved(by: rect.origin)
-        
-        let shift = CGPoint(x: 0.0, y: rect.height/divisor)
-
-        var path = Path()
-        var iteration = 1
-
-        repeat {
-            addCircle(to: &path, using: point)
-            point = point.moved(by: shift)
-            iteration += 1
-        } while iteration <= repetitions
-        
-        return path
-    }
-    
-    /// For debugging purposes, add the circles to the given path that show the point at the beginning of a line as well
-    /// as the two control points for that segment
-    /// - Parameters:
-    ///   - path: the Path that will be modified by adding a circle to it
-    ///   - point: the CGPoint at the beginning of the line
-    private func addCircle(to path: inout Path, using point: CGPoint) {
-        let radius = DiamondConstants.defaultPointRadius
-        
-        // Move to and draw a larger circle at the beginning point
-        path.move(to: point)
-        path.addArc(center: point,
-                    radius: radius,
-                    startAngle: Angle(degrees: 0),
-                    endAngle: Angle(degrees: 360),
-                    clockwise: true)
-        
-    }
-    
-    /// For debugging purposes, creates and returns a ZStack of Views, each of which contains a path for a DiamondShape of one of
-    /// the given colors, where the path can show the beginning point that begins each of the diamond's lines
-    /// - Parameters:
-    ///   - rect: the CGRect that circumscribes the entire DiamondShape
-    ///   - colors: an Array of Colors, one for each of the four segments of the Squiggle
-    /// - Returns: a composite View of all of the SquiggleShapes, with their dot paths, stacked on top of each other.
-    @ViewBuilder
-    func debugViews(in rect: CGRect, with colors: [Color]) -> some View {
-        ZStack {
-            ForEach(0..<4) { index in
-                DiamondShape(repetitions)
-                    .dotsPath(in: rect, from: index)
-                    .foregroundColor(colors[index])
-                    .opacity(0.75)
-            }
-        }
     }
     
 }
@@ -131,7 +56,7 @@ struct DiamondShape: RepeatableShape {
 /// the first is drawn in a rectangle one third the height of the last, and the second in a rectangle 2/3 the height of the last, with each one
 /// centererd vertically.  Additional rects and dots are drawn for debugging purposes, if debuggingn is true
 struct DiamondView: View {
-    let debugging = false
+    let debugging = true
     let color: Color = .blue
     var body: some View {
         VStack {
