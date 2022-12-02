@@ -18,7 +18,7 @@ protocol CurvedClosedRepeatableShape: ClosedRepeatableShape {
     
     /// A Dictionary of SegmentControllers, each stored by a case of an enum. ach SegmentController contains the first and second
     /// control points that define the curve for its segment.
-    var controlFactors: [SegmentKey: SegmentController] {get}
+    var controlFactors: [SegmentKey: SegmentController] {get set}
     
 }
 
@@ -107,7 +107,7 @@ extension CurvedClosedRepeatableShape {
     ///   - rect: a CGRect circumscribing the entire shape
     ///   - originIndex: the index of the point starting the segment
     /// - Returns: a Path that draws all the circles
-    private func dotsPath(in rect: CGRect, from originIndex: Int) -> Path {
+     func dotsPath(in rect: CGRect, from originIndex: Int) -> Path {
         
         let destinationIndex = (originIndex + 1) % pointFactors.count
         let segment = SegmentKey(rawValue: destinationIndex as! Self.SegmentKey.RawValue)!
@@ -158,7 +158,7 @@ extension CurvedClosedRepeatableShape {
         // Move to and draw a smaller circle at the first control point
         path.move(to: controller.control1)
         path.addArc(center: controller.control1,
-                    radius: radius/2,
+                    radius: radius * 2,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: true)
@@ -166,7 +166,7 @@ extension CurvedClosedRepeatableShape {
         // Move to and draw another small circle at the second control point
         path.move(to: controller.control2)
         path.addArc(center: controller.control2,
-                    radius: radius / 2,
+                    radius: radius * 3,
                     startAngle: Angle(degrees: 0),
                     endAngle: Angle(degrees: 360),
                     clockwise: true)
@@ -181,12 +181,44 @@ extension CurvedClosedRepeatableShape {
     @ViewBuilder
     func debugViews(in rect: CGRect, with colors: [Color]) -> some View {
         ZStack {
-            ForEach(0..<colors.count) { index in
+            ForEach(0..<colors.count, id: \.self) { index in
                 Self(repetitions)
                     .dotsPath(in: rect, from: index)
                     .foregroundColor(colors[index])
                     .opacity(0.75)
             }
+        }
+    }
+    
+    func controlFactorsAsAnimatableVector() -> AnimatableVector {
+        var values: [Double] = []
+        
+        SegmentKey.allCases.forEach { eachSegmentKey in
+            controlFactors[eachSegmentKey]!.values.forEach { eachCGFloat in
+                values.append(Double(eachCGFloat))
+            }
+        }
+        return AnimatableVector(values: values)
+    }
+    
+    mutating func controlFactors(from vector: AnimatableVector) {
+        var values = vector.values
+        SegmentKey.allCases.forEach { eachSegmentKey in
+            let segmentValues = values.removeFirst(SegmentController.numValues)
+            controlFactors[eachSegmentKey]!.values = segmentValues
+        }
+    }
+    var animatableData: AnimatablePair<AnimatableVector, AnimatableVector> {
+        get {
+            AnimatablePair(
+                pointFactorsAsAnimatableVector(),
+                controlFactorsAsAnimatableVector()
+            )
+        }
+        set {
+            pointFactors(from: newValue.first)
+            controlFactors(from: newValue.second)
+            
         }
     }
 }

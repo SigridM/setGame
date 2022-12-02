@@ -13,6 +13,9 @@
 		0520AD83290715AA006A9B70 /* FourPartSegmentName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */; };
 		0520AD85290B2238006A9B70 /* CurvedClosedRepeatableShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */; };
 		0520AD87290BF5F6006A9B70 /* SegmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD86290BF5F6006A9B70 /* SegmentController.swift */; };
+		0534BFF72937A1C200483022 /* SquiggleConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0534BFF62937A1C200483022 /* SquiggleConstants.swift */; };
+		0534BFF92939277C00483022 /* AnimatableVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0534BFF82939277C00483022 /* AnimatableVector.swift */; };
+		0534BFFB293A8B8B00483022 /* OvalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0534BFFA293A8B8B00483022 /* OvalConstants.swift */; };
 		05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437228EDCE2200378BB0 /* DiamondShape.swift */; };
 		05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437428EDD95000378BB0 /* OvalShape.swift */; };
 		05D7437A28EF240400378BB0 /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437928EF240400378BB0 /* SetGame.swift */; };
@@ -58,6 +61,9 @@
 		0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourPartSegmentName.swift; sourceTree = "<group>"; };
 		0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurvedClosedRepeatableShape.swift; sourceTree = "<group>"; };
 		0520AD86290BF5F6006A9B70 /* SegmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentController.swift; sourceTree = "<group>"; };
+		0534BFF62937A1C200483022 /* SquiggleConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquiggleConstants.swift; sourceTree = "<group>"; };
+		0534BFF82939277C00483022 /* AnimatableVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableVector.swift; sourceTree = "<group>"; };
+		0534BFFA293A8B8B00483022 /* OvalConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvalConstants.swift; sourceTree = "<group>"; };
 		05D7437228EDCE2200378BB0 /* DiamondShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiamondShape.swift; sourceTree = "<group>"; };
 		05D7437428EDD95000378BB0 /* OvalShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvalShape.swift; sourceTree = "<group>"; };
 		05D7437928EF240400378BB0 /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
@@ -115,9 +121,12 @@
 				0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */,
 				0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */,
 				0520AD86290BF5F6006A9B70 /* SegmentController.swift */,
+				0534BFF82939277C00483022 /* AnimatableVector.swift */,
 				0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */,
 				05D7437428EDD95000378BB0 /* OvalShape.swift */,
+				0534BFFA293A8B8B00483022 /* OvalConstants.swift */,
 				05F78B7028E2263F002B2975 /* SquiggleShape.swift */,
+				0534BFF62937A1C200483022 /* SquiggleConstants.swift */,
 				05F78B4428E1F540002B2975 /* SetGameView.swift */,
 				0520AD7C2901E6D4006A9B70 /* CardView.swift */,
 				05D7438128EF652700378BB0 /* MinWidthAspectVGrid.swift */,
@@ -342,10 +351,13 @@
 				05F78B4528E1F540002B2975 /* SetGameView.swift in Sources */,
 				0520AD87290BF5F6006A9B70 /* SegmentController.swift in Sources */,
 				0520AD7D2901E6D4006A9B70 /* CardView.swift in Sources */,
+				0534BFFB293A8B8B00483022 /* OvalConstants.swift in Sources */,
 				05F78B4328E1F540002B2975 /* SetGameApp.swift in Sources */,
 				0520AD812907118B006A9B70 /* ClosedRepeatableShape.swift in Sources */,
+				0534BFF72937A1C200483022 /* SquiggleConstants.swift in Sources */,
 				05F78B7128E2263F002B2975 /* SquiggleShape.swift in Sources */,
 				05D7438428EF665E00378BB0 /* ViewConstants.swift in Sources */,
+				0534BFF92939277C00483022 /* AnimatableVector.swift in Sources */,
 				05D7438028EF274D00378BB0 /* SetGameConstants.swift in Sources */,
 				0520AD7F2902DEA9006A9B70 /* GameChangingFeature.swift in Sources */,
 				05D7437C28EF243100378BB0 /* SetDeck.swift in Sources */,

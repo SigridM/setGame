@@ -86,6 +86,20 @@ extension Array {
         }
         return answer
     }
+    
+    /// Removes the top k elements from the Array and returns them in a new Array. If there are fewer than k elements in
+    /// the receiver, it returns as many as it can, which may be zero (an empty Array).
+    /// - Parameter k: the number of elements to pop
+    /// - Returns: an Array of  up to k elements from the original Array, or an Array containing all of the elements in the
+    /// original Array, if there are less than k elements.
+    public mutating func removeFirst(_ k: Int) -> [Element] {
+        var answer: [Element] = []
+        let upperLimit = Swift.min(k, self.count)
+        for _ in 0..<upperLimit {
+            answer.append(self.removeFirst())
+        }
+        return answer
+    }
 }
 
 extension CGPoint {

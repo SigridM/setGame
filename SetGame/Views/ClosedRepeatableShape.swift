@@ -16,7 +16,7 @@ protocol ClosedRepeatableShape: Shape {
     
     /// The points that make up the endpoints of the shape, represented as fractions of a unit so they can be scaled to the
     /// enclosing rectangle
-    var pointFactors: [CGPoint] {get}
+    var pointFactors: [CGPoint] {get set}
     
     /// An opportunity for the implementer of this protocol to initialize any instance variables
     init()
@@ -159,12 +159,30 @@ extension ClosedRepeatableShape {
     @ViewBuilder
     func debugViews(in rect: CGRect, with colors: [Color]) -> some View {
         ZStack {
-            ForEach(0..<colors.count) { index in
+            ForEach(0..<colors.count, id: \.self) { index in
                 Self(repetitions)
                     .dotsPath(in: rect, from: index)
                     .foregroundColor(colors[index])
                     .opacity(0.75)
             }
+        }
+    }
+    
+    func pointFactorsAsAnimatableVector() -> AnimatableVector {
+        var values: [Double] = []
+        pointFactors.forEach { pointFactor in
+            values.append(Double(pointFactor.x))
+            values.append(Double(pointFactor.y))
+        }
+        return AnimatableVector(values: values)
+    }
+    
+    mutating func pointFactors(from vector: AnimatableVector) {
+        var values = vector.values
+        for pfIndex in 0..<pointFactors.count { 
+            let point = CGPoint(x: values.removeFirst(),
+                                y: values.removeFirst())
+            pointFactors[pfIndex] = point
         }
     }
 }

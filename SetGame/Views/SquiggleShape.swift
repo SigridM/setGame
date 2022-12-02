@@ -10,122 +10,62 @@ import SwiftUI
 /// A Shape that creates a path for a worm-like curve. By default, it draws a single squiggle, but can be configured to draw
 /// any number of squiggles, stacked vertically, by initializing the shape with a number of repetitions
 struct SquiggleShape: CurvedClosedRepeatableShape {
+    init() {
+    }
     
     /// The total number of squiggles to be drawn, stacked vertically, defaulting to one.
     var repetitions = 1
-    let pointFactors = SquiggleConstants.pointFactors
-    let controlFactors = SquiggleConstants.controlFactors
+    var pointFactors = SquiggleConstants.downLeftPointFactors
+    var controlFactors = SquiggleConstants.downLeftControlFactors
     typealias SegmentKey = FourPartSegmentName
     
-    /// A struct to encapsulate the constants for the Squiggle drawing
-    struct SquiggleConstants {
-        /// Because the original squiggle was drawn in a 60x20 rectangle, all inset calculations are
-        /// based proportionally on that original grid, as if it was a 1x1 square. The insets are
-        /// later scaled by the dimensions of a circumscribing rectangle to fit that rectangle.
-        private static let defaultWidth = 60.0
-        private static let defaultHeight = 20.0
-        
-        /// points 0 and 2 are close to the left and right edges, respectively
-        private static let outmostPointXInset = 8.0
-        private static let point0XFactor = outmostPointXInset / defaultWidth
-        private static let point2XFactor = (defaultWidth - outmostPointXInset) / defaultWidth
-        
-        /// points 1 and 3 are slightly farther from the right and left edges, respectively
-        private static let secondPointXInset = 8.0
-        private static let point1XFactor = (defaultWidth - secondPointXInset) / defaultWidth
-        private static let point3XFactor = secondPointXInset / defaultWidth
-        
-        /// points 1 and 3 are close to the top and bottom, respectively
-        private static let outmostPointYInset = 4.0
-        private static let point1YFactor = outmostPointYInset / defaultHeight
-        private static let point3YFactor = (defaultHeight - outmostPointYInset) / defaultHeight
-        
-        /// points 0 and 2 are slightly farther from the bottom and top, respectively
-        private static let secondPointYInset = 10.0
-        private static let point0YFactor = (defaultHeight - secondPointYInset) / defaultHeight
-        private static let point2YFactor = secondPointYInset / defaultHeight
-        
-        /// An Array of the four points delineating the four segments of the squiggle
-        static var pointFactors = [
-            CGPoint(x: point0XFactor, y: point0YFactor),
-            CGPoint(x: point1XFactor, y: point1YFactor),
-            CGPoint(x: point2XFactor, y: point2YFactor),
-            CGPoint(x: point3XFactor, y: point3YFactor)
-        ]
-        
-        /// control points for the high hump of the upper curve, and the low dip of the lower
-        /// curve, are equal distance away from the left and right edges, respectively
-        private static let innerControlXInset = 33.0
-        private static let upperControl1XFactor = innerControlXInset / defaultWidth
-        private static let lowerControl1XFactor = (defaultWidth - innerControlXInset) / defaultWidth
-        
-        /// control points for the low dip of the upper curve, and the high hump of the lower
-        /// curve, are equal distances away from the right and left edges, respectively
-        private static let outerControlXInset = innerControlXInset - 2.0
-        private static let upperControl2XFactor = (defaultWidth - outerControlXInset) / defaultWidth
-        private static let lowerControl2XFactor = outerControlXInset / defaultWidth
-        
-        /// control points for the high hump of the upper curve, and the low dip of the lower
-        /// curve, are equal distances above and below the top and bottom edges, respectively
-        private static let outerControlYInset = -15.0
-        private static let upperControl1YFactor = outerControlYInset / defaultHeight
-        private static let lowerControl1YFactor = (defaultHeight - outerControlYInset) / defaultHeight
-        
-        /// control points for the low dip of the upper curve, and the high hump of the lower
-        /// curve, are equal distances below and above the bottom and top edges, respectively
-        private static let innerControlYInset = outerControlYInset + 15
-        private static let upperControl2YFactor = (defaultHeight - innerControlYInset) / defaultHeight
-        private static let lowerControl2YFactor = innerControlYInset / defaultHeight
-        
-        /// control points for the inner parts of the left and right endcaps are the same distance
-        /// from the left and right edges, respectively
-        private static let innerEndCapYInset = 2.0
-        private static let leftCapControl1XFactor = innerEndCapYInset / defaultWidth
-        private static let rightCapControl1XFactor = (defaultWidth - innerEndCapYInset) / defaultWidth
-        
-        /// control points for the outer parts of the right and left endcaps are the same distance
-        /// outside the right and left edges, respectively
-        private static let outerEndCapXInset = -1.0
-        private static let rightCapControl2XFactor = (defaultWidth - outerEndCapXInset) / defaultWidth
-        private static let leftCapControl2XFactor = outerEndCapXInset / defaultWidth
+    var direction: Double {
+        get {
+            if pointFactors == SquiggleConstants.downLeftPointFactors {
+                return 1.0
+            } else {
+                return -1.0
+            }
+        }
+        set {
+            if newValue == 1.0 {
+                pointFactors = SquiggleConstants.downLeftPointFactors
+                controlFactors = SquiggleConstants.downLeftControlFactors
+            } else {
+                pointFactors = SquiggleConstants.upLeftPointFactors
+                controlFactors = SquiggleConstants.upLeftControlFactors
+            }
+        }
+    }
+    
+    init(repetitions: Int = 1, pointFactors: [CGPoint] = SquiggleConstants.downLeftPointFactors, controlFactors: [FourPartSegmentName : SegmentController] = SquiggleConstants.downLeftControlFactors, direction: Double = 1.0) {
+        self.repetitions = repetitions
+        self.pointFactors = pointFactors
+        self.controlFactors = controlFactors
+        self.direction = direction
+    }
+    
 
-        /// control points for the highest and lowest parts of the right and left endcaps, respectively
-        /// are the same distance above and below the top and bottom edges, respectively
-        private static let fartherEndCapXInset = -1.0
-        private static let rightCapControl1YFactor = fartherEndCapXInset / defaultHeight
-        private static let leftCapControl1YFactor = (defaultHeight - fartherEndCapXInset) / defaultHeight
-        
-        /// control points for the closer parts of the right and left endcaps are the same distance
-        /// inside the top and bottom edges, respectively
-        private static let closerEndCapYInset = 0.5
-        private static let rightCapControl2YFactor = closerEndCapYInset / defaultHeight
-        private static let leftCapControl2YFactor = (defaultHeight - closerEndCapYInset) / defaultHeight
-        
-        /// A Dictionary of two-point SegmentControllers, stored by their SquiggleName for readability
-        static var controlFactors: [FourPartSegmentName: SegmentController] = [
-            .upper: (SegmentController.from(
-                x1: upperControl1XFactor,
-                y1: upperControl1YFactor,
-                x2: upperControl2XFactor,
-                y2: upperControl2YFactor)),
-            .right: (SegmentController.from(
-                x1: rightCapControl1XFactor,
-                y1: rightCapControl1YFactor,
-                x2: rightCapControl2XFactor,
-                y2: rightCapControl2YFactor)),
-            .lower: (SegmentController.from(
-                x1: lowerControl1XFactor,
-                y1: lowerControl1YFactor,
-                x2: lowerControl2XFactor,
-                y2: lowerControl2YFactor)),
-            .left: (SegmentController.from(
-                x1: leftCapControl1XFactor,
-                y1: leftCapControl1YFactor,
-                x2: leftCapControl2XFactor,
-                y2: leftCapControl2YFactor))
-        ]
-    } // end SquiggleConstants
+    /// For debugging purposes, creates and returns a ZStack of Views, each of which contains a path for a OvalShape of one of
+    /// the given colors, where the path can show the points and control points that make up the oval's curves
+    /// - Parameters:
+    ///   - rect: the CGRect that circumscribes the entire OvalShape
+    ///   - colors: an Array of Colors, one for each of the four segments of the Oval
+    /// - Returns: a composite View of all of the OvalShapes, with their dot paths, stacked on top of each other.
+    @ViewBuilder
+    func debugViews(in rect: CGRect, with colors: [Color]) -> some View {
+        ZStack {
+            ForEach(0..<colors.count, id: \.self) { index in
+                Self(repetitions: repetitions, direction: self.direction)
+                    .dotsPath(in: rect, from: index)
+                    .foregroundColor(colors[index])
+                    .opacity(0.75)
+            }
+        }
+    }
+   
 } // end SquiggleShape
+
 
 /// Tests the SquiggleShape by drawing each of three sets of squiggles: a SquiggleShape with one squiggle; a SquiggleShape with
 /// two squiggles, and a SquiggleShape with three squiggles. Because all squiggles should be the same size, regardless of the number,
@@ -133,7 +73,10 @@ struct SquiggleShape: CurvedClosedRepeatableShape {
 /// centererd vertically.  Additional rects and dots are drawn for debugging purposes, if debuggingn is true
 struct SquiggleView: View {
     let debugging = true
-    let color: Color = .red
+    let color: Color = .blue
+    @State private var squiggleDirection = 1.0
+    @State private var animating = false
+    
     var body: some View {
         VStack {
             GeometryReader { geometry in
@@ -150,25 +93,61 @@ struct SquiggleView: View {
                                               y: 0 + wholeRect.height/3,
                                               width: wholeRect.width,
                                               height: wholeRect.height/3)
-                    
-                    SquiggleShape()
-                        .path(in: squiggleRect)
-                        .strokedPath(StrokeStyle(lineWidth: 3.0))
-                        .foregroundColor(color)
+                    Group {
+                        if animating {
+                            SquiggleShape(
+                                repetitions: 1,
+                                direction: squiggleDirection * -1.0
+                            )
+                            .stroke(style: StrokeStyle.init(lineWidth: 3.0))
+                            .frame(width: squiggleRect.width, height: squiggleRect.height, alignment: .center)
+                            .onAppear {
+                                withAnimation(.easeInOut(duration: 0.5).repeatForever()) {
+                                    squiggleDirection *= -1.0
+                                }
+                            }
+                            .transition(.identity) // keeps it from changing opacity
+
+                        } else {
+                            SquiggleShape(
+                                repetitions: 1,
+                                direction: squiggleDirection * -1.0
+                            )
+                            .stroke(style: StrokeStyle.init(lineWidth: 3.0))
+                            .frame(width: squiggleRect.width, height: squiggleRect.height, alignment: .center)
+                        }
+                    }
+                    .foregroundColor(color)
                     
                     if debugging {
-                        Rectangle()
-                            .path(in: wholeRect)
-                            .strokedPath(StrokeStyle(lineWidth: 3.0))
-                        Rectangle()
-                            .path(in: squiggleRect)
-                            .opacity(0.1)
-                        SquiggleShape()
-                            .debugViews(in: squiggleRect, with: [.red, .purple, .green, .blue])
+                        Group {
+//                            if animating {
+                            let halfRect = CGRect(origin: squiggleRect.origin,
+                                                  size: CGSize(width: squiggleRect.width / 2,
+                                                               height: squiggleRect.height)
+                                                  )
+                                Rectangle()
+                                    .path(in: wholeRect)
+                                    .strokedPath(StrokeStyle(lineWidth: 3.0))
+                                Rectangle()
+                                    .path(in: squiggleRect)
+                                    .opacity(0.1)
+                                Rectangle()
+                                .path(in: halfRect)
+                                    .opacity(0.1)
+                                SquiggleShape(
+                                    repetitions: 1,
+                                    direction: squiggleDirection * -1.0
+                                )
+                                .debugViews(in: squiggleRect, with: [.orange, .purple, .teal, .cyan])
+//                            }
+                        }
+                        .transition(.identity)
                     }
                     Spacer()
                 }
             }
+
             GeometryReader {geometry in
                 ZStack {
                     
@@ -181,12 +160,28 @@ struct SquiggleView: View {
                     // make this one, with only two squiggles, two thirds the height of the
                     // whole rect, and center it one sixth of the way down the rect
                     let squiggleRect = CGRect(x:0,
-                                              y: 0 + wholeRect.height/6,
+                                              y: 0 + wholeRect.height/3,
                                               width: wholeRect.width,
-                                              height: wholeRect.height*2/3)
-                    SquiggleShape(2)
-                        .path(in: squiggleRect)
-                        .foregroundColor(color)
+                                              height: wholeRect.height/3)
+                    
+                    Group {
+                        if animating {
+                            SquiggleShape(
+                                repetitions: 1,
+                                direction: squiggleDirection
+                            )
+                            .frame(width: squiggleRect.width, height: squiggleRect.height, alignment: .center)
+                            .transition(.identity)
+                            
+                        } else {
+                            SquiggleShape(
+                                repetitions: 1,
+                                direction: squiggleDirection
+                            )
+                            .frame(width: squiggleRect.width, height: squiggleRect.height, alignment: .center)
+                        }
+                    }
+                    .foregroundColor(color)
                     
                     if debugging {
                         Rectangle()
@@ -195,7 +190,7 @@ struct SquiggleView: View {
                         Rectangle()
                             .path(in: squiggleRect)
                             .opacity(0.1)
-                        SquiggleShape(2)
+                        SquiggleShape(1)
                             .debugViews(in: squiggleRect, with: [.orange, .purple, .teal, .cyan])
                     }
                     Spacer()
@@ -208,14 +203,36 @@ struct SquiggleView: View {
                                               width: geometry3.size.width,
                                               height: geometry3.size.height)
                     let image = Image(systemName: "circle.grid.3x3")
-                    SquiggleShape(3)
-                        .path(in: squiggleRect)
-                        .foregroundColor(color)
-                        .opacity(0.65)
-                    SquiggleShape(3)
-                        .path(in: squiggleRect)
-                        .foregroundStyle(.image(image))
-                        .opacity(0.55)
+                    Group {
+                        if animating {
+                            SquiggleShape(
+                                repetitions: 3,
+                                direction: squiggleDirection
+                            )
+                            .frame(width: squiggleRect.width, height: squiggleRect.height, alignment: .center)
+                            .foregroundStyle(.image(image))
+                            .opacity(0.55)
+
+                            SquiggleShape(
+                                repetitions: 3,
+                                direction: squiggleDirection
+                            )
+                            .frame(width: squiggleRect.width, height: squiggleRect.height, alignment: .center)
+                            .foregroundColor(color)
+                            .opacity(0.65)
+                        } else {
+                            
+                            SquiggleShape(repetitions: 3, direction: squiggleDirection)
+                                .frame(width: squiggleRect.width, height: squiggleRect.height, alignment: .center)
+                                .foregroundColor(color)
+                                .opacity(0.65)
+                            SquiggleShape(repetitions: 3, direction: squiggleDirection)
+                                .frame(width: squiggleRect.width, height: squiggleRect.height, alignment: .center)
+                                .foregroundStyle(.image(image))
+                                .opacity(0.55)
+                        }
+                    }
+                    .transition(.identity) // keeps it from fading
                     
                     if debugging {
                         Rectangle()
@@ -224,15 +241,21 @@ struct SquiggleView: View {
                         Rectangle()
                             .path(in: squiggleRect)
                             .opacity(0.1)
-                        SquiggleShape(3)
+                        SquiggleShape(repetitions: 3, direction: squiggleDirection)
                             .debugViews(in: squiggleRect, with: [.red, .purple, .green, .blue])
                             .opacity(0.75)
                     }
                     Spacer()
                 }
             }
-        } // end VStack
 
+            Button("Toggle Animation") {
+                animating.toggle()
+            }
+        } // end VStack
+//        .onAppear {
+//            moving.toggle()
+//        }
         .padding()
     } // end body
 } // end SquiggleView

@@ -16,7 +16,7 @@ struct DiamondShape: ClosedRepeatableShape {
     
     /// The points that make up the endpoints of a diamond, represented as fractions of a unit so they can be scaled to the
     /// enclosing rectangle
-    let pointFactors = DiamondConstants.pointFactors
+    var pointFactors = DiamondConstants.pointFactors
 
     /// A struct to encapsulate the constants for the Diamond drawing
     struct DiamondConstants {

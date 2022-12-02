@@ -5,13 +5,42 @@
 //  Created by Sigrid Mortensen on 10/28/22.
 //
 
-import Foundation
+import SwiftUI
 
 /// A structure encapsulating the two control points for a segment of the squiggle. Can be stored, scaled, and moved as a
 /// unit.
 struct SegmentController {
+    init(values: [Double]) {
+        points.control1 = CGPoint(x:values[0], y: values[1])
+        points.control2 = CGPoint(x:values[2], y: values[3])
+    }
+    
+    var values: [Double] {
+        get {
+            [
+                Double(points.control1.x),
+                Double(points.control1.y),
+                Double(points.control2.x),
+                Double(points.control2.y)
+            ]
+        }
+        set {
+            points.control1.x = CGFloat(newValue[0])
+            points.control1.y = CGFloat(newValue[1])
+            points.control2.x = CGFloat(newValue[2])
+            points.control2.y = CGFloat(newValue[3])
+        }
+    }
+
+    static let numValues = 4
+    
+    static func points(_ newPoints: (control1: CGPoint, control2: CGPoint)) -> Self {
+        return Self(values: [newPoints.control1.x, newPoints.control1.y,
+                             newPoints.control2.x, newPoints.control2.y])
+    }
+    
     /// A Tuple containing the two control points for the segment
-    let points: (control1: CGPoint, control2: CGPoint)
+    var points: (control1: CGPoint, control2: CGPoint)
     
     /// A Factory method for creating and returning an instance of the SegmentController structure,
     /// created from its constituent x and y values for each of the two controls
@@ -23,8 +52,14 @@ struct SegmentController {
     /// - Returns: a SegmentController containing the two control points
     static func from(x1: CGFloat, y1: CGFloat,
                      x2: CGFloat, y2: CGFloat) -> SegmentController {
-        SegmentController(points: (CGPoint(x: x1, y: y1),
-                                   CGPoint(x: x2, y: y2)))
+        SegmentController(
+            values: [
+                Double(x1),
+                Double(y1),
+                Double(x2),
+                Double(y2)
+            ]
+        )
     }
     
     /// Creates and returns a copy of the receiver, both of whose control points have been scaled to the given CGSize
@@ -37,7 +72,7 @@ struct SegmentController {
         newPoints = (control1: points.control1.applying(scaling),
                      control2: points.control2.applying(scaling))
         
-        return SegmentController(points: newPoints)
+        return SegmentController.points(newPoints)
     }
     
     /// Creates and returns a copy of the receiver, both of whose control points have been moved by the given CGPoint
@@ -50,7 +85,7 @@ struct SegmentController {
         newPoints = (control1: points.control1.applying(translation),
                      control2: points.control2.applying(translation))
         
-        return SegmentController(points: newPoints)
+        return SegmentController.points(newPoints)
     }
     
     /// The first control point, a CGPoint
