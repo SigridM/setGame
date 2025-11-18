@@ -24,14 +24,17 @@ class SetGameViewModel: ObservableObject {
     /// it replaces those cards on the tableau with new cards, if there are any more cards in the deck. Otherwise, the cards expand
     /// in size to fill the space available.
     func addCards() {
-        model.addCards()
+        withAnimation(.easeInOut(duration: 0.75)) {
+            model.addCards()
+        }
     }
     
     /// Asks the model to react to the user selecting the given card
     /// - Parameter card: a SetCard that is the card selected by the user
     func select(card: SetCard) {
-        model.select(card)
-
+        withAnimation(.easeInOut(duration: 0.5)) {
+            model.select(card)
+        }
     }
     
     /// Answers a Boolean, whether there are the maximum number of cards selected, but they do not make up a proper set.
@@ -61,24 +64,36 @@ class SetGameViewModel: ObservableObject {
 
         if model.hasCapSet() {
             var deadline = DispatchTime.now() + ViewConstants.quickDelayTime
-            model.inAddCardsHint = true
+            withAnimation {
+                model.inAddCardsHint = true
+            }
             DispatchQueue.main.asyncAfter(deadline: deadline) {
-                self.model.inAddCardsHint = false
+                withAnimation {
+                    self.model.inAddCardsHint = false
+                }
             }
             deadline = deadline + ViewConstants.quickDelayTime
             DispatchQueue.main.asyncAfter(deadline: deadline) {
-                self.model.inAddCardsHint = true
+                withAnimation {
+                    self.model.inAddCardsHint = true
+                }
             }
             deadline = deadline + ViewConstants.quickDelayTime
             DispatchQueue.main.asyncAfter(deadline: deadline) {
-                self.model.inAddCardsHint = false
+                withAnimation {
+                    self.model.inAddCardsHint = false
+                }
             }
         } else {
-            model.deselectAll()
-            model.selectFirstSetOnTableau()
+            withAnimation {
+                model.deselectAll()
+                model.selectFirstSetOnTableau()
+            }
             let secondsToDelay = ViewConstants.delayTime
             DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
-                self.model.deselectAll()
+                withAnimation {
+                    self.model.deselectAll()
+                }
             }
         }
 
@@ -99,7 +114,9 @@ class SetGameViewModel: ObservableObject {
     
     /// Asks the model to begin a new game.
     func newGame() {
-        model.startGame()
+        withAnimation {
+            model.startGame()
+        }
     }
     
     /// Answers the current score stored in the model.

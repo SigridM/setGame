@@ -77,7 +77,9 @@ struct MinWidthAspectVGrid<Item, ItemView>: View where ItemView: View, Item: Ide
     private func staticView(cardWidth: CGFloat) -> some View {
         LazyVGrid(columns: [gridItemOf(width: cardWidth)]) {
             ForEach(items) {item in
-                content(item, cardWidth).aspectRatio(aspectRatio, contentMode: .fit)
+                content(item, cardWidth)
+                    .aspectRatio(aspectRatio, contentMode: .fit)
+                    .id(item.id)
             }
         }
     }

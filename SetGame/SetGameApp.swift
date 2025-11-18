@@ -11,8 +11,7 @@ import SwiftUI
 struct SetGameApp: App {
     var body: some Scene {
         WindowGroup {
-//            SetGameView()
-            SquiggleView()
+            SetGameView()
         }
     }
 }

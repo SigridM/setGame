@@ -51,7 +51,7 @@ extension ClosedRepeatableShape {
     
     
     /// To conform to the Shape protocol, creates and returns the Path that draws the shape.
-    /// - Parameter rect: a CGRect that circumscribes the diamond
+    /// - Parameter rect: a CGRect that circumscribes all the diamonds
     /// - Returns: a Path that draws the diamond
     func path(in rect: CGRect) -> Path {
         return shapes(in: rect)
@@ -63,7 +63,10 @@ extension ClosedRepeatableShape {
     /// - Returns: a Path that draws the diamonds
     private func shapes(in rect: CGRect) -> Path {
         var points = pointsScaled(to: rect.size)
-        
+        if repetitions <= 2 {
+            print("SCALED TO WHOLE RECT")
+            print(points)
+        }
         // to fit all the repetitions into the space, we must divide the space up, vertically,
         // by the number of repetitions
         let divisor = Double(repetitions)
@@ -71,9 +74,16 @@ extension ClosedRepeatableShape {
         let scale = CGSize(width: 1.0, height: 1.0/divisor)
         points = points.map{$0.scaled(to: scale)}
         
+        if repetitions <= 2 {
+            print("SCALED TO PORTION OF RECT FOR REPETITIONS")
+            print(points)
+        }
         // once you have the scaled points, move them to the top of the CGRect
         points = points.map{$0.moved(by: rect.origin)}
-        
+        if repetitions <= 2 {
+            print("MOVED TO RECT ORIGIN")
+            print(points)
+        }
         let shift = CGPoint(x: 0.0, y: rect.height/divisor) // how far down to shift each rep
         
         var path = Path()
@@ -83,6 +93,10 @@ extension ClosedRepeatableShape {
         repeat {
             addShapeTo(&path, using: points)
             points = points.map{$0.moved(by: shift)}
+            if repetitions <= 2 {
+                print("SHIFTED")
+                print(points)
+            }
             iteration += 1
         } while iteration <= repetitions
         
@@ -94,11 +108,13 @@ extension ClosedRepeatableShape {
     ///   - path: the Path that will be modified to include the new shape
     ///   - points: the end points delimiting the four lines of the shape
     private func addShapeTo(_ path: inout Path, using points: [CGPoint]) {
+
         path.move(to: points[0])
         
-        for pointIndex in points.indices {
-            path.addLine(to: points[(pointIndex + 1) % points.count])
+        for pointIndex in 1..<points.count {
+            path.addLine(to: points[pointIndex])
         }
+        path.closeSubpath()
     }
     
     /// For debugging purposes, add a circles to the given path that show the point at the beginning of a line
@@ -183,6 +199,15 @@ extension ClosedRepeatableShape {
             let point = CGPoint(x: values.removeFirst(),
                                 y: values.removeFirst())
             pointFactors[pfIndex] = point
+        }
+    }
+    
+    var animatableData: AnimatableVector {
+        get {
+            pointFactorsAsAnimatableVector()
+        }
+        set {
+            pointFactors(from: newValue)
         }
     }
 }

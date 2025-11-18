@@ -137,7 +137,7 @@ struct SetGame {
     // MARK: Public Functions
     
     init() {
-        deck = SetDeck.newLimitedDeck()
+        deck = SetDeck.newDeck()
         tableau = deck.initialDeal()
         selectionState = .lessThanMaxSelected
     }

@@ -13,9 +13,20 @@
 		0520AD83290715AA006A9B70 /* FourPartSegmentName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */; };
 		0520AD85290B2238006A9B70 /* CurvedClosedRepeatableShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */; };
 		0520AD87290BF5F6006A9B70 /* SegmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520AD86290BF5F6006A9B70 /* SegmentController.swift */; };
+		05303E2D293F888600199C8D /* InvertableCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E2C293F888600199C8D /* InvertableCoordinate.swift */; };
+		05303E2F293F8C6100199C8D /* CurvedClosedRepeatableShape2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E2E293F8C6100199C8D /* CurvedClosedRepeatableShape2.swift */; };
+		05303E31293F8CCC00199C8D /* RepeatableShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E30293F8CCC00199C8D /* RepeatableShape.swift */; };
+		05303E33293F8D1E00199C8D /* Segment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E32293F8D1E00199C8D /* Segment.swift */; };
+		05303E3529413C9400199C8D /* DiamondShape2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E3429413C9400199C8D /* DiamondShape2.swift */; };
+		05303E3729413CCE00199C8D /* DiamondConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E3629413CCE00199C8D /* DiamondConstants.swift */; };
+		05303E392941460B00199C8D /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E382941460B00199C8D /* Line.swift */; };
+		05303E3B2941463300199C8D /* DiamondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E3A2941463300199C8D /* DiamondView.swift */; };
+		05303E3D294292D400199C8D /* SegmentedShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05303E3C294292D400199C8D /* SegmentedShape.swift */; };
 		0534BFF72937A1C200483022 /* SquiggleConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0534BFF62937A1C200483022 /* SquiggleConstants.swift */; };
 		0534BFF92939277C00483022 /* AnimatableVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0534BFF82939277C00483022 /* AnimatableVector.swift */; };
 		0534BFFB293A8B8B00483022 /* OvalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0534BFFA293A8B8B00483022 /* OvalConstants.swift */; };
+		0535561A294CF066005F743C /* SquiggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05355619294CF066005F743C /* SquiggleView.swift */; };
+		0535561C294CF09D005F743C /* OvalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0535561B294CF09D005F743C /* OvalView.swift */; };
 		05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437228EDCE2200378BB0 /* DiamondShape.swift */; };
 		05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437428EDD95000378BB0 /* OvalShape.swift */; };
 		05D7437A28EF240400378BB0 /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D7437928EF240400378BB0 /* SetGame.swift */; };
@@ -61,16 +72,27 @@
 		0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourPartSegmentName.swift; sourceTree = "<group>"; };
 		0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurvedClosedRepeatableShape.swift; sourceTree = "<group>"; };
 		0520AD86290BF5F6006A9B70 /* SegmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentController.swift; sourceTree = "<group>"; };
+		05303E2C293F888600199C8D /* InvertableCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvertableCoordinate.swift; sourceTree = "<group>"; };
+		05303E2E293F8C6100199C8D /* CurvedClosedRepeatableShape2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurvedClosedRepeatableShape2.swift; sourceTree = "<group>"; };
+		05303E30293F8CCC00199C8D /* RepeatableShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatableShape.swift; sourceTree = "<group>"; };
+		05303E32293F8D1E00199C8D /* Segment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segment.swift; sourceTree = "<group>"; };
+		05303E3429413C9400199C8D /* DiamondShape2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiamondShape2.swift; sourceTree = "<group>"; };
+		05303E3629413CCE00199C8D /* DiamondConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiamondConstants.swift; sourceTree = "<group>"; };
+		05303E382941460B00199C8D /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		05303E3A2941463300199C8D /* DiamondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiamondView.swift; sourceTree = "<group>"; };
+		05303E3C294292D400199C8D /* SegmentedShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedShape.swift; sourceTree = "<group>"; };
 		0534BFF62937A1C200483022 /* SquiggleConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquiggleConstants.swift; sourceTree = "<group>"; };
 		0534BFF82939277C00483022 /* AnimatableVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableVector.swift; sourceTree = "<group>"; };
 		0534BFFA293A8B8B00483022 /* OvalConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvalConstants.swift; sourceTree = "<group>"; };
+		05355619294CF066005F743C /* SquiggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquiggleView.swift; sourceTree = "<group>"; };
+		0535561B294CF09D005F743C /* OvalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvalView.swift; sourceTree = "<group>"; };
 		05D7437228EDCE2200378BB0 /* DiamondShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiamondShape.swift; sourceTree = "<group>"; };
 		05D7437428EDD95000378BB0 /* OvalShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvalShape.swift; sourceTree = "<group>"; };
 		05D7437928EF240400378BB0 /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
 		05D7437B28EF243100378BB0 /* SetDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDeck.swift; sourceTree = "<group>"; };
 		05D7437D28EF247600378BB0 /* SetCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCard.swift; sourceTree = "<group>"; };
 		05D7437F28EF274D00378BB0 /* SetGameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameConstants.swift; sourceTree = "<group>"; };
-		05D7438128EF652700378BB0 /* MinWidthAspectVGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinWidthAspectVGrid.swift; sourceTree = SOURCE_ROOT; };
+		05D7438128EF652700378BB0 /* MinWidthAspectVGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MinWidthAspectVGrid.swift; path = "SetGame/Views/Approach-Independent/MinWidthAspectVGrid.swift"; sourceTree = SOURCE_ROOT; };
 		05D7438328EF665E00378BB0 /* ViewConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewConstants.swift; sourceTree = "<group>"; };
 		05D7438528F1B13D00378BB0 /* SetGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameViewModel.swift; sourceTree = "<group>"; };
 		05F78B3F28E1F540002B2975 /* SetGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,24 +135,67 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		05355616294CEF60005F743C /* Approach One */ = {
+			isa = PBXGroup;
+			children = (
+				0520AD802907118B006A9B70 /* ClosedRepeatableShape.swift */,
+				0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */,
+				05303E3629413CCE00199C8D /* DiamondConstants.swift */,
+				05D7437228EDCE2200378BB0 /* DiamondShape.swift */,
+				0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */,
+				0534BFFA293A8B8B00483022 /* OvalConstants.swift */,
+				05D7437428EDD95000378BB0 /* OvalShape.swift */,
+				0520AD86290BF5F6006A9B70 /* SegmentController.swift */,
+				0534BFF62937A1C200483022 /* SquiggleConstants.swift */,
+				05F78B7028E2263F002B2975 /* SquiggleShape.swift */,
+			);
+			path = "Approach One";
+			sourceTree = "<group>";
+		};
+		05355617294CEFFC005F743C /* Approach-Independent */ = {
+			isa = PBXGroup;
+			children = (
+				0534BFF82939277C00483022 /* AnimatableVector.swift */,
+				0520AD7C2901E6D4006A9B70 /* CardView.swift */,
+				0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */,
+				05D7438128EF652700378BB0 /* MinWidthAspectVGrid.swift */,
+				05F78B4428E1F540002B2975 /* SetGameView.swift */,
+				05D7438328EF665E00378BB0 /* ViewConstants.swift */,
+			);
+			path = "Approach-Independent";
+			sourceTree = "<group>";
+		};
+		05355618294CF043005F743C /* Testing */ = {
+			isa = PBXGroup;
+			children = (
+				05303E3A2941463300199C8D /* DiamondView.swift */,
+				05355619294CF066005F743C /* SquiggleView.swift */,
+				0535561B294CF09D005F743C /* OvalView.swift */,
+			);
+			path = Testing;
+			sourceTree = "<group>";
+		};
+		0535561D294CF0DC005F743C /* Approach Two */ = {
+			isa = PBXGroup;
+			children = (
+				05303E2E293F8C6100199C8D /* CurvedClosedRepeatableShape2.swift */,
+				05303E3429413C9400199C8D /* DiamondShape2.swift */,
+				05303E2C293F888600199C8D /* InvertableCoordinate.swift */,
+				05303E382941460B00199C8D /* Line.swift */,
+				05303E30293F8CCC00199C8D /* RepeatableShape.swift */,
+				05303E32293F8D1E00199C8D /* Segment.swift */,
+				05303E3C294292D400199C8D /* SegmentedShape.swift */,
+			);
+			path = "Approach Two";
+			sourceTree = "<group>";
+		};
 		05D7437628EF239B00378BB0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				05D7437228EDCE2200378BB0 /* DiamondShape.swift */,
-				0520AD802907118B006A9B70 /* ClosedRepeatableShape.swift */,
-				0520AD84290B2238006A9B70 /* CurvedClosedRepeatableShape.swift */,
-				0520AD82290715AA006A9B70 /* FourPartSegmentName.swift */,
-				0520AD86290BF5F6006A9B70 /* SegmentController.swift */,
-				0534BFF82939277C00483022 /* AnimatableVector.swift */,
-				0520AD7E2902DEA9006A9B70 /* GameChangingFeature.swift */,
-				05D7437428EDD95000378BB0 /* OvalShape.swift */,
-				0534BFFA293A8B8B00483022 /* OvalConstants.swift */,
-				05F78B7028E2263F002B2975 /* SquiggleShape.swift */,
-				0534BFF62937A1C200483022 /* SquiggleConstants.swift */,
-				05F78B4428E1F540002B2975 /* SetGameView.swift */,
-				0520AD7C2901E6D4006A9B70 /* CardView.swift */,
-				05D7438128EF652700378BB0 /* MinWidthAspectVGrid.swift */,
-				05D7438328EF665E00378BB0 /* ViewConstants.swift */,
+				05355617294CEFFC005F743C /* Approach-Independent */,
+				05355616294CEF60005F743C /* Approach One */,
+				0535561D294CF0DC005F743C /* Approach Two */,
+				05355618294CF043005F743C /* Testing */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -347,23 +412,34 @@
 				05D7437E28EF247600378BB0 /* SetCard.swift in Sources */,
 				05D7437528EDD95000378BB0 /* OvalShape.swift in Sources */,
 				0520AD83290715AA006A9B70 /* FourPartSegmentName.swift in Sources */,
+				05303E33293F8D1E00199C8D /* Segment.swift in Sources */,
 				05D7437328EDCE2200378BB0 /* DiamondShape.swift in Sources */,
 				05F78B4528E1F540002B2975 /* SetGameView.swift in Sources */,
 				0520AD87290BF5F6006A9B70 /* SegmentController.swift in Sources */,
+				05303E2F293F8C6100199C8D /* CurvedClosedRepeatableShape2.swift in Sources */,
 				0520AD7D2901E6D4006A9B70 /* CardView.swift in Sources */,
+				05303E392941460B00199C8D /* Line.swift in Sources */,
 				0534BFFB293A8B8B00483022 /* OvalConstants.swift in Sources */,
+				0535561C294CF09D005F743C /* OvalView.swift in Sources */,
 				05F78B4328E1F540002B2975 /* SetGameApp.swift in Sources */,
+				05303E2D293F888600199C8D /* InvertableCoordinate.swift in Sources */,
 				0520AD812907118B006A9B70 /* ClosedRepeatableShape.swift in Sources */,
+				05303E3529413C9400199C8D /* DiamondShape2.swift in Sources */,
 				0534BFF72937A1C200483022 /* SquiggleConstants.swift in Sources */,
 				05F78B7128E2263F002B2975 /* SquiggleShape.swift in Sources */,
 				05D7438428EF665E00378BB0 /* ViewConstants.swift in Sources */,
 				0534BFF92939277C00483022 /* AnimatableVector.swift in Sources */,
 				05D7438028EF274D00378BB0 /* SetGameConstants.swift in Sources */,
+				05303E3B2941463300199C8D /* DiamondView.swift in Sources */,
+				05303E31293F8CCC00199C8D /* RepeatableShape.swift in Sources */,
 				0520AD7F2902DEA9006A9B70 /* GameChangingFeature.swift in Sources */,
 				05D7437C28EF243100378BB0 /* SetDeck.swift in Sources */,
 				05D7438228EF652700378BB0 /* MinWidthAspectVGrid.swift in Sources */,
 				05F78B6D28E1F5A2002B2975 /* SetFeature.swift in Sources */,
+				05303E3729413CCE00199C8D /* DiamondConstants.swift in Sources */,
 				05D7437A28EF240400378BB0 /* SetGame.swift in Sources */,
+				0535561A294CF066005F743C /* SquiggleView.swift in Sources */,
+				05303E3D294292D400199C8D /* SegmentedShape.swift in Sources */,
 				05F78B6F28E20EC3002B2975 /* Extensions.swift in Sources */,
 				05D7438628F1B13D00378BB0 /* SetGameViewModel.swift in Sources */,
 				0520AD85290B2238006A9B70 /* CurvedClosedRepeatableShape.swift in Sources */,
