@@ -63,10 +63,6 @@ extension ClosedRepeatableShape {
     /// - Returns: a Path that draws the diamonds
     private func shapes(in rect: CGRect) -> Path {
         var points = pointsScaled(to: rect.size)
-        if repetitions <= 2 {
-            print("SCALED TO WHOLE RECT")
-            print(points)
-        }
         // to fit all the repetitions into the space, we must divide the space up, vertically,
         // by the number of repetitions
         let divisor = Double(repetitions)
@@ -74,16 +70,8 @@ extension ClosedRepeatableShape {
         let scale = CGSize(width: 1.0, height: 1.0/divisor)
         points = points.map{$0.scaled(to: scale)}
         
-        if repetitions <= 2 {
-            print("SCALED TO PORTION OF RECT FOR REPETITIONS")
-            print(points)
-        }
         // once you have the scaled points, move them to the top of the CGRect
         points = points.map{$0.moved(by: rect.origin)}
-        if repetitions <= 2 {
-            print("MOVED TO RECT ORIGIN")
-            print(points)
-        }
         let shift = CGPoint(x: 0.0, y: rect.height/divisor) // how far down to shift each rep
         
         var path = Path()
@@ -93,10 +81,6 @@ extension ClosedRepeatableShape {
         repeat {
             addShapeTo(&path, using: points)
             points = points.map{$0.moved(by: shift)}
-            if repetitions <= 2 {
-                print("SHIFTED")
-                print(points)
-            }
             iteration += 1
         } while iteration <= repetitions
         

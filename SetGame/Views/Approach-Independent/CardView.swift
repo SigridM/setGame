@@ -113,7 +113,10 @@ struct CardView: View {
                         y: card.isPartOfSet ? 1.5 : 1.0,
                         anchor: .center
                     )
-                    .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: card.isPartOfSet)
+                    .animation(
+                        card.isPartOfSet ? .easeInOut(duration: 1.0).repeatForever(autoreverses: true) : .default,
+                        value: card.isPartOfSet
+                    )
                     .frame(width: rect.width, height: rect.height)
                     .position(x: rect.midX, y: rect.midY)
             case .shape2 :
@@ -123,14 +126,20 @@ struct CardView: View {
                         y: card.isPartOfSet ? 1.5 : 1.0,
                         anchor: .center
                     )
-                    .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: card.isPartOfSet)
+                    .animation(
+                        card.isPartOfSet ? .easeInOut(duration: 1.0).repeatForever(autoreverses: true) : .default,
+                        value: card.isPartOfSet
+                    )
                     .frame(width: rect.width, height: rect.height)
                     .position(x: rect.midX, y: rect.midY)
             case .shape3 :
                 AnyShape(SquiggleShape(repetitions: card.number.rawValue, direction: direction))
                     .frame(width: rect.width, height: rect.height)
                     .position(x: rect.midX, y: rect.midY)
-                    .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: card.isPartOfSet)
+                    .animation(
+                        card.isPartOfSet ? .easeInOut(duration: 1.0).repeatForever(autoreverses: true) : .default,
+                        value: card.isPartOfSet
+                    )
         }
     }
     
@@ -151,7 +160,10 @@ struct CardView: View {
                         y: card.isPartOfSet ? 1.5 : 1.0,
                         anchor: .center
                     )
-                    .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: card.isPartOfSet)
+                    .animation(
+                        card.isPartOfSet ? .easeInOut(duration: 1.0).repeatForever(autoreverses: true) : .default,
+                        value: card.isPartOfSet
+                    )
                     .frame(width: rect.width, height: rect.height)
                     .position(x: rect.midX, y: rect.midY)
             case .shape2 :
@@ -162,7 +174,10 @@ struct CardView: View {
                         y: card.isPartOfSet ? 1.5 : 1.0,
                         anchor: .center
                     )
-                    .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: card.isPartOfSet)
+                    .animation(
+                        card.isPartOfSet ? .easeInOut(duration: 1.0).repeatForever(autoreverses: true) : .default,
+                        value: card.isPartOfSet
+                    )
                     .frame(width: rect.width, height: rect.height)
                     .position(x: rect.midX, y: rect.midY)
             case .shape3 :
@@ -170,7 +185,10 @@ struct CardView: View {
                     .stroke(lineWidth: ViewConstants.cardBorderWidth)
                     .frame(width: rect.width, height: rect.height)
                     .position(x: rect.midX, y: rect.midY)
-                    .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: card.isPartOfSet)
+                    .animation(
+                        card.isPartOfSet ? .easeInOut(duration: 1.0).repeatForever(autoreverses: true) : .default,
+                        value: card.isPartOfSet
+                    )
         }
     }
 }

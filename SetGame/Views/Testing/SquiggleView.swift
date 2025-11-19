@@ -14,8 +14,7 @@ struct SquiggleView: View {
     @State private var animating = false
 
     var body: some View {
-        print("SquiggleView body updated")
-        return VStack {
+        VStack {
             GeometryReader { geometry in
                 let rowHeight = geometry.size.height / 3
                 VStack(spacing: 0) {
