@@ -29,6 +29,9 @@ struct SetGame {
     /// The game keeps track of the running score
     private(set) var score = 0.0
     
+    /// A counter that increments each time a new game is started, used to reset animation state
+    private(set) var gameNumber = 0
+    
     // MARK: Computed inst vars
     /// A Boolean that is true if we have a selection containing a full set.
     var hasSetSelected: Bool {
@@ -149,6 +152,7 @@ struct SetGame {
         tableau = deck.initialDeal()
         selectionState = .lessThanMaxSelected
         score = 0.0
+        gameNumber += 1
     }
 
     /// Answers a Boolean: whether a game is already in progress

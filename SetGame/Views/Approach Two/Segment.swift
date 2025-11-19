@@ -50,7 +50,6 @@ extension Segment {
     /// - Parameters:
     ///   - path: the Path that will be modified to include the new segment
     func add(to path: inout Path) {
-        print("StartPoint: \(startPoint)")
         path.move(to: startPoint)
         path.addLine(to: endPoint)
     }

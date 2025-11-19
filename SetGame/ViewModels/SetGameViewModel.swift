@@ -114,7 +114,9 @@ class SetGameViewModel: ObservableObject {
     
     /// Asks the model to begin a new game.
     func newGame() {
-        withAnimation {
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
             model.startGame()
         }
     }
@@ -123,6 +125,12 @@ class SetGameViewModel: ObservableObject {
     /// - Returns: a Double for the current score
     func score() -> Double {
         model.score
+    }
+    
+    /// Answers the current game number, which increments with each new game
+    /// - Returns: an Int for the current game number
+    func gameNumber() -> Int {
+        model.gameNumber
     }
     
     /// Answers a Boolean, whether a game is in progress
