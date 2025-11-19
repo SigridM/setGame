@@ -9,6 +9,12 @@ This is a SwiftUI-based implementation of the classic Set card game, created as 
 - MVC → MVVM refactoring practice
 - Pure SwiftUI implementation (no UIKit)
 
+## Technologies Used
+- Swift 5
+- SwiftUI
+- MVVM Architecture
+- Xcode 15 (2025 update)
+
 ## Getting Started
 
 1. Clone this repository:
